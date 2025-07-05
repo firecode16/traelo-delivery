@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: traelo-delivery
+  profiles:
+    active: dev
+  cloud:
+    config:
+      enabled: false
+      failFast: false
+      uri: ${SPRING_CLOUD_CONFIG_URI}
+      name: ${SPRING_APPLICATION_NAME}
+      label: ${SPRING_CLOUD_CONFIG_LABEL}
+      profile: ${SPRING_CLOUD_CONFIG_PROFILE}
+      allow-override: true
+  config:
+    name: ${spring.application.name}
+  web:
+    resource.add-mappings: false

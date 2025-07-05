@@ -1,0 +1,31 @@
+server:
+  port: 8083
+  servlet:
+    context-path: /api
+
+spring:
+  serverHost: 192.168.1.122
+  serverPort: 3306
+  dataBase: traelo_db
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${spring.serverHost}:${spring.serverPort}/${spring.dataBase}?createDatabaseIfNotExist=true&useSSL=false
+    username: server
+    password: admin123
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 5
+      connection-test-query: select 1;
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 512MB
+      max-request-size: 512MB
+  jpa:
+    open-in-view: true
+    generate-ddl: true
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.format_sql: false
