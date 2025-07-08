@@ -30,9 +30,9 @@ public class BusinessController {
 		return businessService.getByUserId(userId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
-	@PutMapping("/business/update/{id}")
-	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Business data) {
-		return ResponseEntity.ok(businessService.updateBusiness(id, data));
+	@PutMapping("/business/update/{userId}")
+	public ResponseEntity<?> update(@PathVariable Long userId, @RequestBody Business data) {
+		return ResponseEntity.ok(businessService.updateBusiness(userId, data));
 	}
 
 	@GetMapping("/business/getAll")

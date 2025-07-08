@@ -34,8 +34,8 @@ public class BusinessServiceImpl implements BusinessService {
 
 	@Transactional
 	@Override
-	public Business updateBusiness(Long id, Business data) {
-		Business existing = businessRepository.findById(id).orElseThrow(() -> new RuntimeException("Negocio no encontrado"));
+	public Business updateBusiness(Long userId, Business data) {
+		Business existing = businessRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Negocio no encontrado"));
 
 		existing.setName(data.getName());
 		existing.setDescription(data.getDescription());
