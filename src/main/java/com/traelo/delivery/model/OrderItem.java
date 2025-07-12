@@ -19,14 +19,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "order_items")
 public class OrderItem {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@ManyToOne
-	@JoinColumn(name = "menu_id", nullable = false)
-	private Menu menu;
+	private Long orderItemId;
 
 	private Integer quantity;
 
@@ -35,6 +31,10 @@ public class OrderItem {
 
 	@Column(precision = 10, scale = 2)
 	private BigDecimal totalPrice;
+
+	@ManyToOne
+	@JoinColumn(name = "menu_id", nullable = false)
+	private Menu menu;
 
 	@ManyToOne
 	@JoinColumn(name = "order_id", nullable = false)

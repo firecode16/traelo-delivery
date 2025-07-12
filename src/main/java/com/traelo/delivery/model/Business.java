@@ -21,10 +21,10 @@ public class Business {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	private Long businessId;
 	private Long userId; // ← the user_id extends token
 
-	private String name;
+	private String fullName;
 	private String description;
 	private String address;
 

@@ -22,11 +22,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "menus")
 public class Menu {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	private Long menuId;
 	private String name;
 	private String description;
 

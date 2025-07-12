@@ -37,11 +37,12 @@ public class BusinessServiceImpl implements BusinessService {
 	public Business updateBusiness(Long userId, Business data) {
 		Business existing = businessRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Negocio no encontrado"));
 
-		existing.setName(data.getName());
+		existing.setFullName(data.getFullName());
 		existing.setDescription(data.getDescription());
 		existing.setAddress(data.getAddress());
 		existing.setBackdrop(data.getBackdrop());
 		existing.setIsActive(data.getIsActive());
+		existing.setUpdatedAt(data.getUpdatedAt());
 
 		return businessRepository.save(existing);
 	}

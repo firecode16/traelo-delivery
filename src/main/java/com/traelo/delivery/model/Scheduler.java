@@ -22,10 +22,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "scheduler")
 public class Scheduler {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	private Long schedulerId;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "day_of_week", nullable = false)

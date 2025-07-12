@@ -4,12 +4,15 @@ server:
     context-path: /api
 
 spring:
+  output:
+    ansi:
+      enabled: ALWAYS
   serverHost: 192.168.1.122
   serverPort: 3306
   dataBase: traelo_db
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${spring.serverHost}:${spring.serverPort}/${spring.dataBase}?createDatabaseIfNotExist=true&useSSL=false
+    url: jdbc:mysql://${spring.serverHost}:${spring.serverPort}/${spring.dataBase}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     username: server
     password: admin123
     hikari:
@@ -29,3 +32,11 @@ spring:
       ddl-auto: update
     properties:
       hibernate.format_sql: false
+
+logging:
+  level:
+    root: INFO
+    '[com.traelo.delivery]': DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

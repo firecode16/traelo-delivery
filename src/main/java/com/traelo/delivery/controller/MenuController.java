@@ -50,7 +50,7 @@ public class MenuController {
 		return ResponseEntity.ok(menuService.createMenu(menu));
 	}
 
-	@GetMapping("/menu/business/{businessId}")
+	@GetMapping("/menu/getMenusByBusiness/{businessId}")
 	public ResponseEntity<List<Menu>> getMenusByBusiness(@PathVariable Long businessId) {
 		return ResponseEntity.ok(menuService.getMenusByBusinessId(businessId));
 	}
