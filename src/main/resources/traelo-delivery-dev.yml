@@ -1,9 +1,9 @@
 server:
   port: 8083
-  servlet:
-    context-path: /api
 
 spring:
+  application:
+    name: traelo-delivery
   output:
     ansi:
       enabled: ALWAYS

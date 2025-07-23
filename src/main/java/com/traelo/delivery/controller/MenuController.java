@@ -7,12 +7,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,13 +21,13 @@ import com.traelo.delivery.model.Menu;
 import com.traelo.delivery.service.MenuService;
 
 @RestController
-@CrossOrigin("*")
+@RequestMapping("/api/menu")
 public class MenuController {
 
 	@Autowired
 	private MenuService menuService;
 
-	@PostMapping(value = "/menu/create")
+	@PostMapping("/create")
 	public ResponseEntity<?> createMenu(@RequestParam Long menuId, @RequestParam Long businessId, @RequestParam String name, @RequestParam String description, @RequestParam String category, @RequestParam BigDecimal price, @RequestParam("imagen") MultipartFile fileImagen) throws Exception {
 		Menu menu = new Menu();
 		menu.setMenuId(menuId);
@@ -46,18 +46,18 @@ public class MenuController {
 		return ResponseEntity.ok(menuService.createMenu(menu));
 	}
 
-	@GetMapping("/menu/getMenusByBusiness/{businessId}")
+	@GetMapping("/getMenusByBusiness/{businessId}")
 	public ResponseEntity<List<Menu>> getMenusByBusiness(@PathVariable Long businessId) {
 		return ResponseEntity.ok(menuService.getMenusByBusinessId(businessId));
 	}
 
-	@GetMapping("/menu/getMenuById/{menuId}")
+	@GetMapping("/getMenuById/{menuId}")
 	public ResponseEntity<Menu> getMenuById(@PathVariable Long menuId) {
 		Optional<Menu> menu = menuService.getMenuById(menuId);
 		return menu.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
-	@PutMapping(value = "/menu/update/{menuId}")
+	@PutMapping("/update/{menuId}")
 	public ResponseEntity<?> updateMenu(@PathVariable Long menuId, @RequestParam String name, @RequestParam String description, @RequestParam String category, @RequestParam BigDecimal price, @RequestParam("imagen") MultipartFile fileImagen) throws Exception {
 		Menu updated = new Menu();
 		updated.setMenuId(menuId);

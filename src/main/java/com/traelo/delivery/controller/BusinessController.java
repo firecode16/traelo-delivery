@@ -9,12 +9,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,28 +23,28 @@ import com.traelo.delivery.model.Business;
 import com.traelo.delivery.service.BusinessService;
 
 @RestController
-@CrossOrigin("*")
+@RequestMapping("/api/business")
 public class BusinessController {
 
 	@Autowired
 	private BusinessService businessService;
 
-	@PostMapping("/business/create")
+	@PostMapping("/create")
 	public ResponseEntity<?> create(@RequestBody Business business) {
 		return ResponseEntity.ok(businessService.createBusiness(business));
 	}
 
-	@GetMapping("/business/getByUser/{userId}")
+	@GetMapping("/getByUser/{userId}")
 	public ResponseEntity<?> getByUser(@PathVariable Long userId) {
 		return businessService.getByUserId(userId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
-	@PutMapping("/business/updateBusiness/{userId}")
+	@PutMapping("/updateBusiness/{userId}")
 	public ResponseEntity<?> updateBusinessByUserId(@PathVariable Long userId, @RequestBody Business data) {
 		return ResponseEntity.ok(businessService.updateBusinessByUserId(userId, data));
 	}
 
-	@PutMapping(value = "/business/updateLogo/{businessId}")
+	@PutMapping("/updateLogo/{businessId}")
 	public ResponseEntity<?> updateLogoBusinessById(@PathVariable Long businessId, @RequestParam("logo") MultipartFile logoFile) throws IOException {
 		if (logoFile.isEmpty()) {
 			return ResponseEntity.badRequest().body("No se recibió ningún archivo.");
@@ -59,7 +59,7 @@ public class BusinessController {
 		return ResponseEntity.ok(businessService.updateLogoBusinessById(businessId, logoFile));
 	}
 
-	@GetMapping("/business/getLogo/{businessId}")
+	@GetMapping("/getLogo/{businessId}")
 	public ResponseEntity<byte[]> getBusinessLogo(@PathVariable Long businessId) {
 		byte[] logoBytes = businessService.getBusinessLogo(businessId);
 
@@ -74,7 +74,7 @@ public class BusinessController {
 		return new ResponseEntity<>(logoBytes, headers, HttpStatus.OK);
 	}
 
-	@GetMapping("/business/getAll")
+	@GetMapping("/getAll")
 	public ResponseEntity<?> getAll() {
 		return ResponseEntity.ok(businessService.getAllBusinesses());
 	}
