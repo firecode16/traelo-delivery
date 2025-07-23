@@ -8,11 +8,11 @@ import com.traelo.delivery.model.Menu;
 public interface MenuService {
 	Menu createMenu(Menu menu);
 
-	Optional<Menu> getMenuById(Long id);
+	Optional<Menu> getMenuById(Long menuId);
 
 	List<Menu> getMenusByBusinessId(Long businessId);
 
-	Menu updateMenu(Long id, Menu menu);
+	Menu updateMenu(Long menuId, Menu menu);
 
-	void deleteMenu(Long id);
+	void deleteMenu(Long menuId);
 }

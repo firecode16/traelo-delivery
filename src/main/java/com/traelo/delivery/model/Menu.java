@@ -7,12 +7,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,8 +25,10 @@ public class Menu {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long menuId;
+	private Long businessId;
 	private String name;
 	private String description;
+	private String category;
 
 	@Column(precision = 10, scale = 2, nullable = false)
 	private BigDecimal price;
@@ -44,7 +45,6 @@ public class Menu {
 	@Temporal(TemporalType.TIMESTAMP)
 	private String updatedAt;
 
-	@ManyToOne
-	@JoinColumn(name = "business_id", nullable = false)
-	private Business business;
+	@Transient
+	private String imageBase64;
 }

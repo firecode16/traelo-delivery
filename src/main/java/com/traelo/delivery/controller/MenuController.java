@@ -1,11 +1,11 @@
 package com.traelo.delivery.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.traelo.delivery.model.Business;
 import com.traelo.delivery.model.Menu;
-import com.traelo.delivery.repository.BusinessRepository;
 import com.traelo.delivery.service.MenuService;
 
 @RestController
@@ -29,22 +27,20 @@ public class MenuController {
 	@Autowired
 	private MenuService menuService;
 
-	@Autowired
-	private BusinessRepository businessRepository;
-
-	@PostMapping(value = "/menu/create", consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<?> createMenu(@RequestParam String name, @RequestParam String description, @RequestParam BigDecimal price, @RequestParam Long businessId, @RequestParam(required = false) MultipartFile image) throws Exception {
-		Business business = businessRepository.findById(businessId).orElseThrow(() -> new RuntimeException("Negocio no encontrado"));
-
+	@PostMapping(value = "/menu/create")
+	public ResponseEntity<?> createMenu(@RequestParam Long menuId, @RequestParam Long businessId, @RequestParam String name, @RequestParam String description, @RequestParam String category, @RequestParam BigDecimal price, @RequestParam("imagen") MultipartFile fileImagen) throws Exception {
 		Menu menu = new Menu();
+		menu.setMenuId(menuId);
+		menu.setBusinessId(businessId);
 		menu.setName(name);
 		menu.setDescription(description);
+		menu.setCategory(category);
 		menu.setPrice(price);
 		menu.setIsActive(true);
-		menu.setBusiness(business);
+		menu.setCreatedAt(LocalDateTime.now().toString());
 
-		if (image != null && !image.isEmpty()) {
-			menu.setImage(image.getBytes());
+		if (fileImagen != null && !fileImagen.isEmpty()) {
+			menu.setImage(fileImagen.getBytes());
 		}
 
 		return ResponseEntity.ok(menuService.createMenu(menu));
@@ -55,30 +51,32 @@ public class MenuController {
 		return ResponseEntity.ok(menuService.getMenusByBusinessId(businessId));
 	}
 
-	@GetMapping("/menu/getMenuById/{id}")
-	public ResponseEntity<Menu> getMenuById(@PathVariable Long id) {
-		Optional<Menu> menu = menuService.getMenuById(id);
+	@GetMapping("/menu/getMenuById/{menuId}")
+	public ResponseEntity<Menu> getMenuById(@PathVariable Long menuId) {
+		Optional<Menu> menu = menuService.getMenuById(menuId);
 		return menu.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
-	@PutMapping(value = "/menu/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<?> updateMenu(@PathVariable Long id, @RequestParam String name, @RequestParam String description, @RequestParam BigDecimal price, @RequestParam Boolean isActive, @RequestParam(required = false) MultipartFile image) throws Exception {
+	@PutMapping(value = "/menu/update/{menuId}")
+	public ResponseEntity<?> updateMenu(@PathVariable Long menuId, @RequestParam String name, @RequestParam String description, @RequestParam String category, @RequestParam BigDecimal price, @RequestParam("imagen") MultipartFile fileImagen) throws Exception {
 		Menu updated = new Menu();
+		updated.setMenuId(menuId);
 		updated.setName(name);
 		updated.setDescription(description);
+		updated.setCategory(category);
 		updated.setPrice(price);
-		updated.setIsActive(isActive);
+		updated.setUpdatedAt(LocalDateTime.now().toString());
 
-		if (image != null && !image.isEmpty()) {
-			updated.setImage(image.getBytes());
+		if (fileImagen != null && !fileImagen.isEmpty()) {
+			updated.setImage(fileImagen.getBytes());
 		}
 
-		return ResponseEntity.ok(menuService.updateMenu(id, updated));
+		return ResponseEntity.ok(menuService.updateMenu(menuId, updated));
 	}
 
-	@DeleteMapping("/menu/delete/{id}")
-	public ResponseEntity<?> deleteMenu(@PathVariable Long id) {
-		menuService.deleteMenu(id);
+	@DeleteMapping("/menu/delete/{menuId}")
+	public ResponseEntity<?> deleteMenu(@PathVariable Long menuId) {
+		menuService.deleteMenu(menuId);
 		return ResponseEntity.ok("Menú eliminado");
 	}
 }

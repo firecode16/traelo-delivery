@@ -10,4 +10,6 @@ import com.traelo.delivery.model.Business;
 @Repository
 public interface BusinessRepository extends JpaRepository<Business, Long> {
 	Optional<Business> findByUserId(Long userId);
+
+	Optional<Business> findByBusinessId(Long businessId);
 }

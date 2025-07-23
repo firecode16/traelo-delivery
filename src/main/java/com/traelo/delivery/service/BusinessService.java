@@ -1,7 +1,10 @@
 package com.traelo.delivery.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.traelo.delivery.model.Business;
 
@@ -10,7 +13,11 @@ public interface BusinessService {
 
 	Optional<Business> getByUserId(Long userId);
 
-	Business updateBusiness(Long id, Business business);
+	Business updateBusinessByUserId(Long id, Business business);
+
+	int updateLogoBusinessById(Long businessId, MultipartFile logo) throws IOException;
+
+	byte[] getBusinessLogo(Long businessId);
 
 	List<Business> getAllBusinesses();
 }

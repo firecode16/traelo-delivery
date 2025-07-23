@@ -1,7 +1,9 @@
 package com.traelo.delivery.service.impl;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,47 +19,48 @@ import com.traelo.delivery.service.SchedulerService;
 public class SchedulerServiceImpl implements SchedulerService {
 
 	@Autowired
-	private SchedulerRepository schedulerRepo;
+	private SchedulerRepository schedulerRepository;
 
 	@Autowired
-	private BusinessRepository businessRepo;
+	private BusinessRepository businessRepository;
 
 	@Transactional
 	@Override
 	public Scheduler createSchedule(Scheduler schedule) {
-		Business business = businessRepo.findById(schedule.getBusiness().getId()).orElseThrow(() -> new RuntimeException("Negocio no encontrado"));
-		schedule.setBusiness(business);
-		return schedulerRepo.save(schedule);
+		Optional<Business> business = businessRepository.findByBusinessId(schedule.getBusinessId());
+		if (business.isEmpty()) {
+			throw new RuntimeException("Negocio no encontrado");
+		}
+		return schedulerRepository.save(schedule);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<Scheduler> getSchedulesByBusinessId(Long businessId) {
-		Business business = businessRepo.findById(businessId).orElseThrow(() -> new RuntimeException("Negocio no encontrado"));
-		return schedulerRepo.findByBusiness(business);
+	public Scheduler getSchedulesByBusinessId(Long businessId) {
+		Optional<Business> business = businessRepository.findByBusinessId(businessId);
+		if (business.isEmpty()) {
+			throw new RuntimeException("Negocio no encontrado");
+		}
+		return schedulerRepository.findByBusinessId(businessId);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
 	public List<Scheduler> getSchedulesByBusinessIdAndDay(Long businessId, DayOfWeek dayOfWeek) {
-		Business business = businessRepo.findById(businessId).orElseThrow(() -> new RuntimeException("Negocio no encontrado"));
-		return schedulerRepo.findByBusinessAndDayOfWeek(business, dayOfWeek);
+		return new ArrayList<>();
 	}
 
 	@Transactional
 	@Override
-	public Scheduler updateSchedule(Long id, Scheduler schedule) {
-		Scheduler existing = schedulerRepo.findById(id).orElseThrow(() -> new RuntimeException("Horario no encontrado"));
-		existing.setDayOfWeek(schedule.getDayOfWeek());
-		existing.setOpenTime(schedule.getOpenTime());
-		existing.setCloseTime(schedule.getCloseTime());
+	public Scheduler updateSchedule(Long schedulerId, Scheduler schedule) {
+		Scheduler existing = schedulerRepository.findBySchedulerId(schedulerId).orElseThrow(() -> new RuntimeException("Horario no encontrado"));
 		existing.setIsActive(schedule.getIsActive());
-		return schedulerRepo.save(existing);
+		return schedulerRepository.save(existing);
 	}
 
 	@Transactional
 	@Override
-	public void deleteSchedule(Long id) {
-		schedulerRepo.deleteById(id);
+	public void deleteSchedule(Long schedulerId) {
+		schedulerRepository.deleteBySchedulerId(schedulerId);
 	}
 }

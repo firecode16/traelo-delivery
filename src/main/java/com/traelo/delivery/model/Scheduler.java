@@ -10,8 +10,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,21 +24,18 @@ public class Scheduler {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long schedulerId;
+	private Long businessId;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "day_of_week", nullable = false)
+	@Column(name = "day_of_week", nullable = true)
 	private DayOfWeek dayOfWeek;
 
-	@Column(name = "open_time", nullable = false)
+	@Column(name = "open_time", nullable = true)
 	private LocalTime openTime;
 
-	@Column(name = "close_time", nullable = false)
+	@Column(name = "close_time", nullable = true)
 	private LocalTime closeTime;
 
 	@Column(name = "is_active", nullable = false)
 	private Boolean isActive = true;
-
-	@ManyToOne
-	@JoinColumn(name = "business_id", nullable = false)
-	private Business business;
 }

@@ -30,8 +30,13 @@ public class SchedulerController {
 	}
 
 	@GetMapping("/schedules/getSchedulesByBusiness/{businessId}")
-	public ResponseEntity<List<Scheduler>> getSchedulesByBusiness(@PathVariable Long businessId) {
-		return ResponseEntity.ok(schedulerService.getSchedulesByBusinessId(businessId));
+	public ResponseEntity<Scheduler> getSchedulesByBusiness(@PathVariable Long businessId) {
+		Scheduler scheduler = schedulerService.getSchedulesByBusinessId(businessId);
+		if (scheduler == null) {
+			return ResponseEntity.notFound().build();
+		}
+
+		return ResponseEntity.ok(scheduler);
 	}
 
 	@GetMapping("/schedules/getSchedulesByDay/{businessId}/day/{dayOfWeek}")
@@ -39,14 +44,14 @@ public class SchedulerController {
 		return ResponseEntity.ok(schedulerService.getSchedulesByBusinessIdAndDay(businessId, dayOfWeek));
 	}
 
-	@PutMapping("/schedules/update/{id}")
-	public ResponseEntity<Scheduler> updateSchedule(@PathVariable Long id, @RequestBody Scheduler schedule) {
-		return ResponseEntity.ok(schedulerService.updateSchedule(id, schedule));
+	@PutMapping("/schedules/update/{schedulerId}")
+	public ResponseEntity<Scheduler> updateSchedule(@PathVariable Long schedulerId, @RequestBody Scheduler schedule) {
+		return ResponseEntity.ok(schedulerService.updateSchedule(schedulerId, schedule));
 	}
 
-	@DeleteMapping("/schedules/delete/{id}")
-	public ResponseEntity<String> deleteSchedule(@PathVariable Long id) {
-		schedulerService.deleteSchedule(id);
+	@DeleteMapping("/schedules/delete/{schedulerId}")
+	public ResponseEntity<String> deleteSchedule(@PathVariable Long schedulerId) {
+		schedulerService.deleteSchedule(schedulerId);
 		return ResponseEntity.ok("Horario eliminado");
 	}
 }

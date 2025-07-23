@@ -1,17 +1,17 @@
 package com.traelo.delivery.repository;
 
-import java.time.DayOfWeek;
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.traelo.delivery.model.Business;
 import com.traelo.delivery.model.Scheduler;
 
 @Repository
 public interface SchedulerRepository extends JpaRepository<Scheduler, Long> {
-	List<Scheduler> findByBusiness(Business business);
+	Scheduler findByBusinessId(Long businessId);
 
-	List<Scheduler> findByBusinessAndDayOfWeek(Business business, DayOfWeek dayOfWeek);
+	Optional<Scheduler> findBySchedulerId(Long schedulerId);
+
+	void deleteBySchedulerId(Long schedulerId);
 }

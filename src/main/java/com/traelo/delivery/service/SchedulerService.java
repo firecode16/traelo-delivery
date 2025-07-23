@@ -8,7 +8,7 @@ import com.traelo.delivery.model.Scheduler;
 public interface SchedulerService {
 	Scheduler createSchedule(Scheduler schedule);
 
-	List<Scheduler> getSchedulesByBusinessId(Long businessId);
+	Scheduler getSchedulesByBusinessId(Long businessId);
 
 	List<Scheduler> getSchedulesByBusinessIdAndDay(Long businessId, DayOfWeek dayOfWeek);
 

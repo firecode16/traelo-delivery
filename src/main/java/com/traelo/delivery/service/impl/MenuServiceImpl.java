@@ -25,31 +25,40 @@ public class MenuServiceImpl implements MenuService {
 	@Transactional
 	@Override
 	public Menu createMenu(Menu menu) {
+		Optional<Business> business = businessRepository.findByBusinessId(menu.getBusinessId());
+		if (business.isEmpty()) {
+			throw new RuntimeException("Negocio no encontrado");
+		}
 		return menuRepository.save(menu);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public Optional<Menu> getMenuById(Long id) {
-		return menuRepository.findById(id);
+	public Optional<Menu> getMenuById(Long menuId) {
+		return menuRepository.findByMenuId(menuId);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
 	public List<Menu> getMenusByBusinessId(Long businessId) {
-		Optional<Business> business = businessRepository.findById(businessId);
-		return business.map(menuRepository::findByBusiness).orElse(List.of());
+		Optional<Business> business = businessRepository.findByBusinessId(businessId);
+		if (business.isEmpty()) {
+			throw new RuntimeException("Negocio no encontrado");
+		}
+		return menuRepository.findByBusinessId(businessId);
 	}
 
 	@Transactional
 	@Override
-	public Menu updateMenu(Long id, Menu updatedMenu) {
-		Menu menu = menuRepository.findById(id).orElseThrow(() -> new RuntimeException("Menú no encontrado"));
+	public Menu updateMenu(Long menuId, Menu updatedMenu) {
+		Menu menu = menuRepository.findByMenuId(menuId).orElseThrow(() -> new RuntimeException("Menú no encontrado"));
 
+		menu.setMenuId(menuId);
 		menu.setName(updatedMenu.getName());
 		menu.setDescription(updatedMenu.getDescription());
+		menu.setCategory(updatedMenu.getCategory());
 		menu.setPrice(updatedMenu.getPrice());
-		menu.setIsActive(updatedMenu.getIsActive());
+		menu.setUpdatedAt(updatedMenu.getUpdatedAt());
 
 		if (updatedMenu.getImage() != null && updatedMenu.getImage().length > 0) {
 			menu.setImage(updatedMenu.getImage());
@@ -60,7 +69,7 @@ public class MenuServiceImpl implements MenuService {
 
 	@Transactional
 	@Override
-	public void deleteMenu(Long id) {
-		menuRepository.deleteById(id);
+	public void deleteMenu(Long menuId) {
+		menuRepository.deleteByMenuId(menuId);
 	}
 }
