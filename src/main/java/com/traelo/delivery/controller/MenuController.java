@@ -74,7 +74,7 @@ public class MenuController {
 		return ResponseEntity.ok(menuService.updateMenu(menuId, updated));
 	}
 
-	@DeleteMapping("/menu/delete/{menuId}")
+	@DeleteMapping("/delete/{menuId}")
 	public ResponseEntity<?> deleteMenu(@PathVariable Long menuId) {
 		menuService.deleteMenu(menuId);
 		return ResponseEntity.ok("Menú eliminado");
