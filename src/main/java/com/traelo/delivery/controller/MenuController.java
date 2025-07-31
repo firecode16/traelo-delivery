@@ -1,11 +1,15 @@
 package com.traelo.delivery.controller;
 
+import static com.traelo.delivery.util.Util.getImageMimeType;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.traelo.delivery.model.Menu;
+import com.traelo.delivery.model.dto.MenuDTO;
 import com.traelo.delivery.service.MenuService;
 
 @RestController
@@ -47,14 +52,33 @@ public class MenuController {
 	}
 
 	@GetMapping("/getMenusByBusiness/{businessId}")
-	public ResponseEntity<List<Menu>> getMenusByBusiness(@PathVariable Long businessId) {
+	public ResponseEntity<List<MenuDTO>> getMenusByBusiness(@PathVariable Long businessId) {
 		return ResponseEntity.ok(menuService.getMenusByBusinessId(businessId));
 	}
 
 	@GetMapping("/getMenuById/{menuId}")
-	public ResponseEntity<Menu> getMenuById(@PathVariable Long menuId) {
-		Optional<Menu> menu = menuService.getMenuById(menuId);
-		return menu.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<MenuDTO> getMenuById(@PathVariable Long menuId) {
+		MenuDTO menu = menuService.getMenuById(menuId);
+		
+		if (menu == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(menu);
+	}
+
+	@GetMapping("/getImage/{menuId}")
+	public ResponseEntity<byte[]> getMenuImage(@PathVariable Long menuId) {
+		byte[] imageBytes = menuService.getMenuImage(menuId);
+
+		// get type MIME
+		String mimeType = getImageMimeType(imageBytes);
+		if (mimeType == null) {
+			return ResponseEntity.badRequest().body(null);
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.parseMediaType(mimeType));
+		return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
 	}
 
 	@PutMapping("/update/{menuId}")

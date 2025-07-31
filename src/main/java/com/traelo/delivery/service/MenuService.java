@@ -1,16 +1,18 @@
 package com.traelo.delivery.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.traelo.delivery.model.Menu;
+import com.traelo.delivery.model.dto.MenuDTO;
 
 public interface MenuService {
 	Menu createMenu(Menu menu);
 
-	Optional<Menu> getMenuById(Long menuId);
+	MenuDTO getMenuById(Long menuId);
 
-	List<Menu> getMenusByBusinessId(Long businessId);
+	List<MenuDTO> getMenusByBusinessId(Long businessId);
+
+	byte[] getMenuImage(Long menuId);
 
 	Menu updateMenu(Long menuId, Menu menu);
 

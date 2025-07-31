@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.traelo.delivery.model.Business;
 import com.traelo.delivery.model.Scheduler;
+import com.traelo.delivery.model.dto.SchedulerDTO;
 import com.traelo.delivery.repository.BusinessRepository;
 import com.traelo.delivery.repository.SchedulerRepository;
 import com.traelo.delivery.service.SchedulerService;
@@ -36,12 +37,18 @@ public class SchedulerServiceImpl implements SchedulerService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public Scheduler getSchedulesByBusinessId(Long businessId) {
+	public SchedulerDTO getSchedulesByBusinessId(Long businessId) {
 		Optional<Business> business = businessRepository.findByBusinessId(businessId);
 		if (business.isEmpty()) {
 			throw new RuntimeException("Negocio no encontrado");
 		}
-		return schedulerRepository.findByBusinessId(businessId);
+
+		Scheduler scheduler = schedulerRepository.findByBusinessId(businessId);
+		if (scheduler == null) {
+			return null;
+		}
+		
+		return new SchedulerDTO(scheduler.getSchedulerId(), scheduler.getBusinessId(), scheduler.getIsActive());
 	}
 
 	@Transactional(readOnly = true)

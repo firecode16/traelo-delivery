@@ -33,6 +33,11 @@ spring:
     properties:
       hibernate.format_sql: false
 
+traelo:
+  security:
+    datauser:
+      url: http://localhost:8080/api/auth/getDataUser/
+
 logging:
   level:
     root: INFO

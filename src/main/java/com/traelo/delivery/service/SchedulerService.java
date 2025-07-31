@@ -4,11 +4,12 @@ import java.time.DayOfWeek;
 import java.util.List;
 
 import com.traelo.delivery.model.Scheduler;
+import com.traelo.delivery.model.dto.SchedulerDTO;
 
 public interface SchedulerService {
 	Scheduler createSchedule(Scheduler schedule);
 
-	Scheduler getSchedulesByBusinessId(Long businessId);
+	SchedulerDTO getSchedulesByBusinessId(Long businessId);
 
 	List<Scheduler> getSchedulesByBusinessIdAndDay(Long businessId, DayOfWeek dayOfWeek);
 

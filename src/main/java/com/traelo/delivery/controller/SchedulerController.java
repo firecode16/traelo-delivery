@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.traelo.delivery.model.Scheduler;
+import com.traelo.delivery.model.dto.SchedulerDTO;
 import com.traelo.delivery.service.SchedulerService;
 
 @RestController
@@ -30,8 +31,8 @@ public class SchedulerController {
 	}
 
 	@GetMapping("/getSchedulesByBusiness/{businessId}")
-	public ResponseEntity<Scheduler> getSchedulesByBusiness(@PathVariable Long businessId) {
-		Scheduler scheduler = schedulerService.getSchedulesByBusinessId(businessId);
+	public ResponseEntity<SchedulerDTO> getSchedulesByBusiness(@PathVariable Long businessId) {
+		SchedulerDTO scheduler = schedulerService.getSchedulesByBusinessId(businessId);
 		if (scheduler == null) {
 			return ResponseEntity.notFound().build();
 		}
