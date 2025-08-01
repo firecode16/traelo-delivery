@@ -3,19 +3,17 @@ package com.traelo.delivery.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.traelo.delivery.util.JsonOrderConverter;
 import com.traelo.delivery.util.OrderStatus;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -33,29 +31,28 @@ public class Order {
 	private Long id;
 	private Long orderId;
 	private Long customerId;
+	private Long businessId;
 
 	@Enumerated(EnumType.STRING)
 	@Column(length = 20)
 	private OrderStatus status = OrderStatus.PENDING;
 
-	@Column(precision = 10, scale = 2, nullable = false)
-	private BigDecimal total;
-
 	private String address;
 
 	@Column(columnDefinition = "TEXT")
 	private String notes;
+	private String deliveryMethod;
+
+	@Column(columnDefinition = "json")
+	@Convert(converter = JsonOrderConverter.class)
+	private List<String> jsonOrder;
+
+	@Column(precision = 10, scale = 2, nullable = false)
+	private BigDecimal totalPrice;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private String createdAt;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private String updatedAt;
-
-	@ManyToOne
-	@JoinColumn(name = "business_id", nullable = false)
-	private Business business;
-
-	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<OrderItem> items;
 }
