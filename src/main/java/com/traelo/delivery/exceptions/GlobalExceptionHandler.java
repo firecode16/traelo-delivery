@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,6 +36,10 @@ public class GlobalExceptionHandler {
 		body.put("error", status.getReasonPhrase());
 		body.put("message", message);
 
-		return new ResponseEntity<>(body, status);
+		// 🔥 We force the content-type to JSON to avoid conflicts with controllers that return images.
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		return new ResponseEntity<>(body, headers, status);
 	}
 }

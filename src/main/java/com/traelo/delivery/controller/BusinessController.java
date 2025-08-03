@@ -65,17 +65,26 @@ public class BusinessController {
 
 	@GetMapping("/getLogo/{businessId}")
 	public ResponseEntity<byte[]> getBusinessLogo(@PathVariable Long businessId) {
-		byte[] logoBytes = businessService.getBusinessLogo(businessId);
+		try {
+			byte[] logoBytes = businessService.getBusinessLogo(businessId);
 
-		// get type MIME
-		String mimeType = getImageMimeType(logoBytes);
-		if (mimeType == null) {
-			return ResponseEntity.badRequest().body(null);
+			if (logoBytes == null || logoBytes.length == 0) {
+				return ResponseEntity.notFound().build();
+			}
+
+			// get type MIME
+			String mimeType = getImageMimeType(logoBytes);
+			if (mimeType == null) {
+				return ResponseEntity.badRequest().build();
+			}
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.parseMediaType(mimeType));
+			return new ResponseEntity<>(logoBytes, headers, HttpStatus.OK);
+		} catch (Exception ex) {
+			ex.getLocalizedMessage();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.parseMediaType(mimeType));
-		return new ResponseEntity<>(logoBytes, headers, HttpStatus.OK);
 	}
 
 	@GetMapping("/getAll")

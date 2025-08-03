@@ -68,17 +68,26 @@ public class MenuController {
 
 	@GetMapping("/getImage/{menuId}")
 	public ResponseEntity<byte[]> getMenuImage(@PathVariable Long menuId) {
-		byte[] imageBytes = menuService.getMenuImage(menuId);
+		try {
+			byte[] imageBytes = menuService.getMenuImage(menuId);
 
-		// get type MIME
-		String mimeType = getImageMimeType(imageBytes);
-		if (mimeType == null) {
-			return ResponseEntity.badRequest().body(null);
+			if (imageBytes == null || imageBytes.length == 0) {
+				return ResponseEntity.notFound().build();
+			}
+
+			// get type MIME
+			String mimeType = getImageMimeType(imageBytes);
+			if (mimeType == null) {
+				return ResponseEntity.badRequest().build();
+			}
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.parseMediaType(mimeType));
+			return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+		} catch (Exception ex) {
+			ex.getLocalizedMessage();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.parseMediaType(mimeType));
-		return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
 	}
 
 	@PutMapping("/update/{menuId}")
