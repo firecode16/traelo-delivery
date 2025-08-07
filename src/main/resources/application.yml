@@ -8,14 +8,11 @@ spring:
   output:
     ansi:
       enabled: ALWAYS
-  serverHost: traelo-mysql
-  serverPort: 3306
-  dataBase: traelo_db
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${spring.serverHost}:${spring.serverPort}/${spring.dataBase}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
-    username: traelo_super
-    password: traelo30316
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     hikari:
       connection-timeout: 60000
       maximum-pool-size: 5
@@ -28,12 +25,11 @@ spring:
       ddl-auto: update
     properties:
       hibernate.format_sql: false
-
-servlet:
-  multipart:
-    enabled: true
-    max-file-size: 512MB
-    max-request-size: 512MB
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 512MB
+      max-request-size: 512MB
 
 traelo:
   security:
