@@ -10,9 +10,9 @@ spring:
       enabled: ALWAYS
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
+    url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/traelo_db?useSSL=false&allowPublicKeyRetrieval=true
+    username: ${MYSQLUSER}
+    password: ${MYSQLPASSWORD}
     hikari:
       connection-timeout: 60000
       maximum-pool-size: 5
