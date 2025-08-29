@@ -10,9 +10,9 @@ spring:
       enabled: ALWAYS
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.1.122:3306/traelo_db?useSSL=false&allowPublicKeyRetrieval=true
-    username: server
-    password: admin123
+    url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}?useSSL=false&allowPublicKeyRetrieval=true
+    username: ${MYSQLUSER}
+    password: ${MYSQLPASSWORD}
     hikari:
       connection-timeout: 60000
       maximum-pool-size: 5
@@ -34,7 +34,7 @@ spring:
 traelo:
   security:
     datauser:
-      url: http://localhost:8082/api/auth/getDataUser/
+      url: http://traelo-security.railway.internal:8082/api/auth/getDataUser/
 
 logging:
   level:
