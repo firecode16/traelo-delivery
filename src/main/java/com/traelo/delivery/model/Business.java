@@ -34,6 +34,18 @@ public class Business {
 
 	private Boolean isActive = true;
 
+	@Column(name = "accept_cash")
+	private Boolean acceptCash = true;
+
+	@Column(name = "accept_transfer")
+	private Boolean acceptTransfer = false;
+
+	@Column(name = "bank_clabe")
+	private String bankClabe;
+
+	@Column(name = "bank_card")
+	private String bankCard;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private String createdAt;
 

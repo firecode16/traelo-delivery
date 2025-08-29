@@ -19,6 +19,7 @@ public class OrderRequestDTO {
 	private String address;
 	private String notes;
 	private String deliveryMethod;
+	private String paymentMethod;
 	private List<String> jsonOrder;
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status = OrderStatus.PENDING;

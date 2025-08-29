@@ -70,6 +70,10 @@ public class BusinessServiceImpl implements BusinessService {
 		existing.setDescription(data.getDescription());
 		existing.setAddress(data.getAddress());
 		existing.setIsActive(data.getIsActive());
+		existing.setAcceptCash(data.getAcceptCash());
+		existing.setAcceptTransfer(data.getAcceptTransfer());
+		existing.setBankClabe(data.getBankClabe());
+		existing.setBankCard(data.getBankCard());
 		existing.setUpdatedAt(data.getUpdatedAt());
 
 		return businessRepository.save(existing);
@@ -130,7 +134,7 @@ public class BusinessServiceImpl implements BusinessService {
 			SchedulerDTO schedulerDTO = (scheduler != null) ? new SchedulerDTO(scheduler.getSchedulerId(), scheduler.getBusinessId(), scheduler.getIsActive()) : null;
 
 			UserResponse user = getUserById(b.getUserId());
-			return new BusinessDTO(b.getBusinessId(), b.getUserId(), user.getPhone(), b.getFullName(), b.getDescription(), b.getAddress(), b.getIsActive(), menus, schedulerDTO);
+			return new BusinessDTO(b.getBusinessId(), b.getUserId(), user.getPhone(), b.getFullName(), b.getDescription(), b.getAddress(), b.getIsActive(), b.getAcceptCash(), b.getAcceptTransfer(), b.getBankClabe(), b.getBankCard(), menus, schedulerDTO);
 		}).toList();
 
 		return new PagedResponse<>(content, businessPage.getNumber(), businessPage.getSize(), businessPage.getTotalPages(), businessPage.getTotalElements(), businessPage.isLast());
