@@ -30,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
 		order.setAddress(dto.getAddress());
 		order.setNotes(dto.getNotes());
 		order.setDeliveryMethod(dto.getDeliveryMethod());
+		order.setPaymentMethod(dto.getPaymentMethod());
 		order.setJsonOrder(dto.getJsonOrder());
 		order.setTotalPrice(dto.getTotalPrice());
 		order.setCreatedAt(dto.getCreatedAt());

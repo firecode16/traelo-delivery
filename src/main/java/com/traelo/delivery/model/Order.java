@@ -42,6 +42,7 @@ public class Order {
 	@Column(columnDefinition = "TEXT")
 	private String notes;
 	private String deliveryMethod;
+	private String paymentMethod;
 
 	@Column(columnDefinition = "json")
 	@Convert(converter = JsonOrderConverter.class)

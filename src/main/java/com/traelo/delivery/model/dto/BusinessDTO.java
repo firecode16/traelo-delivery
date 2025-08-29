@@ -19,6 +19,10 @@ public class BusinessDTO {
 	private String description;
 	private String address;
 	private Boolean isActive;
+	private Boolean acceptCash;
+	private Boolean acceptTransfer;
+	private String bankClabe;
+	private String bankCard;
 
 	private List<MenuDTO> menu;
 	private SchedulerDTO scheduler;
