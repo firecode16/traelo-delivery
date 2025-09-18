@@ -21,6 +21,7 @@ public class Business {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(unique = true)
 	private Long businessId;
 	private Long userId; // ← the user_id extends token
 
@@ -45,6 +46,12 @@ public class Business {
 
 	@Column(name = "bank_card")
 	private String bankCard;
+
+	@Column(name = "pick_up")
+	private Boolean pickUp = true;
+
+	@Column(name = "at_home")
+	private Boolean atHome = false;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private String createdAt;

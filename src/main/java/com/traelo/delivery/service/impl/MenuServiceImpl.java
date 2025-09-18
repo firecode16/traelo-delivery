@@ -42,7 +42,7 @@ public class MenuServiceImpl implements MenuService {
 			return null;
 		}
 		
-		return new MenuDTO(menu.getMenuId(), menu.getBusinessId(), menu.getName(), menu.getDescription(), menu.getCategory(), menu.getPrice(), menu.getIsActive());
+		return new MenuDTO(menu.getMenuId(), menu.getBusinessId(), menu.getName(), menu.getDescription(), menu.getCategory(), menu.getPrice(), menu.getIsActive(), menu.getUpdatedAt());
 	}
 
 	@Transactional(readOnly = true)
@@ -52,7 +52,7 @@ public class MenuServiceImpl implements MenuService {
 		if (business.isEmpty()) {
 			throw new RuntimeException("Negocio no encontrado");
 		}
-		return menuRepository.findByBusinessId(businessId).stream().map(m -> new MenuDTO(m.getMenuId(), m.getBusinessId(), m.getName(), m.getDescription(), m.getCategory(), m.getPrice(), m.getIsActive())).toList();
+		return menuRepository.findByBusinessId(businessId).stream().map(m -> new MenuDTO(m.getMenuId(), m.getBusinessId(), m.getName(), m.getDescription(), m.getCategory(), m.getPrice(), m.getIsActive(), m.getUpdatedAt())).toList();
 	}
 
 	@Transactional(readOnly = true)

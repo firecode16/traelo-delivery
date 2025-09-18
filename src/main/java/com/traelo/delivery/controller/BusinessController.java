@@ -40,7 +40,12 @@ public class BusinessController {
 
 	@GetMapping("/getByUser/{userId}")
 	public ResponseEntity<?> getByUser(@PathVariable Long userId) {
-		return businessService.getByUserId(userId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+		BusinessDTO businessDTO = businessService.getByUserId(userId);
+
+		if (businessDTO == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(businessDTO);
 	}
 
 	@PutMapping("/updateBusiness/{userId}")

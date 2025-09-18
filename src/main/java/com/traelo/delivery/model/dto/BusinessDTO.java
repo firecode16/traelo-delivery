@@ -23,6 +23,9 @@ public class BusinessDTO {
 	private Boolean acceptTransfer;
 	private String bankClabe;
 	private String bankCard;
+	private Boolean pickUp;
+	private Boolean atHome;
+	private String updatedAt;
 
 	private List<MenuDTO> menu;
 	private SchedulerDTO scheduler;

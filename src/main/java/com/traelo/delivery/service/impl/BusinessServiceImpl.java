@@ -57,8 +57,28 @@ public class BusinessServiceImpl implements BusinessService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public Optional<Business> getByUserId(Long userId) {
-		return businessRepository.findByUserId(userId);
+	public BusinessDTO getByUserId(Long userId) {
+		Business business = businessRepository.findByUserId(userId).orElse(null);
+
+		if (business == null) {
+			return null;
+		}
+
+		BusinessDTO businessDTO = new BusinessDTO();
+		businessDTO.setBusinessId(business.getBusinessId());
+		businessDTO.setUserId(business.getUserId());
+		businessDTO.setFullName(business.getFullName());
+		businessDTO.setDescription(business.getDescription());
+		businessDTO.setAddress(business.getAddress());
+		businessDTO.setIsActive(business.getIsActive());
+		businessDTO.setAcceptCash(business.getAcceptCash());
+		businessDTO.setAcceptTransfer(business.getAcceptTransfer());
+		businessDTO.setBankClabe(business.getBankClabe());
+		businessDTO.setBankCard(business.getBankCard());
+		businessDTO.setPickUp(business.getPickUp());
+		businessDTO.setAtHome(business.getAtHome());
+		businessDTO.setUpdatedAt(business.getUpdatedAt());
+		return businessDTO;
 	}
 
 	@Transactional
@@ -74,6 +94,8 @@ public class BusinessServiceImpl implements BusinessService {
 		existing.setAcceptTransfer(data.getAcceptTransfer());
 		existing.setBankClabe(data.getBankClabe());
 		existing.setBankCard(data.getBankCard());
+		existing.setPickUp(data.getPickUp());
+		existing.setAtHome(data.getAtHome());
 		existing.setUpdatedAt(data.getUpdatedAt());
 
 		return businessRepository.save(existing);
@@ -128,13 +150,13 @@ public class BusinessServiceImpl implements BusinessService {
 		Page<Business> businessPage = businessRepository.findAll(pageable);
 
 		List<BusinessDTO> content = businessPage.stream().map(b -> {
-			List<MenuDTO> menus = menuRepository.findByBusinessId(b.getBusinessId()).stream().map(m -> new MenuDTO(m.getMenuId(), m.getBusinessId(), m.getName(), m.getDescription(), m.getCategory(), m.getPrice(), m.getIsActive())).toList();
+			List<MenuDTO> menus = menuRepository.findByBusinessId(b.getBusinessId()).stream().map(m -> new MenuDTO(m.getMenuId(), m.getBusinessId(), m.getName(), m.getDescription(), m.getCategory(), m.getPrice(), m.getIsActive(), m.getUpdatedAt())).toList();
 
 			Scheduler scheduler = schedulerRepository.findByBusinessId(b.getBusinessId());
 			SchedulerDTO schedulerDTO = (scheduler != null) ? new SchedulerDTO(scheduler.getSchedulerId(), scheduler.getBusinessId(), scheduler.getIsActive()) : null;
 
 			UserResponse user = getUserById(b.getUserId());
-			return new BusinessDTO(b.getBusinessId(), b.getUserId(), user.getPhone(), b.getFullName(), b.getDescription(), b.getAddress(), b.getIsActive(), b.getAcceptCash(), b.getAcceptTransfer(), b.getBankClabe(), b.getBankCard(), menus, schedulerDTO);
+			return new BusinessDTO(b.getBusinessId(), b.getUserId(), user.getPhone(), b.getFullName(), b.getDescription(), b.getAddress(), b.getIsActive(), b.getAcceptCash(), b.getAcceptTransfer(), b.getBankClabe(), b.getBankCard(), b.getPickUp(), b.getAtHome(), b.getUpdatedAt(), menus, schedulerDTO);
 		}).toList();
 
 		return new PagedResponse<>(content, businessPage.getNumber(), businessPage.getSize(), businessPage.getTotalPages(), businessPage.getTotalElements(), businessPage.isLast());
