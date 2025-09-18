@@ -5,17 +5,19 @@ server:
 spring:
   application:
     name: traelo-delivery
-  output:
-    ansi:
-      enabled: ALWAYS
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}?useSSL=false&allowPublicKeyRetrieval=true
     username: ${MYSQLUSER}
     password: ${MYSQLPASSWORD}
     hikari:
-      connection-timeout: 60000
-      maximum-pool-size: 5
+      connection-timeout: 30000
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      validation-timeout: 5000
+      keepalive-time: 300000
       connection-test-query: select 1;
   jpa:
     open-in-view: true
