@@ -19,4 +19,5 @@ public class MenuDTO {
 	private String category;
 	private BigDecimal price;
 	private Boolean isActive;
+	private String updatedAt;
 }
