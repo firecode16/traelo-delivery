@@ -11,14 +11,15 @@ spring:
     username: ${MYSQLUSER}
     password: ${MYSQLPASSWORD}
     hikari:
-      connection-timeout: 30000
       maximum-pool-size: 10
       minimum-idle: 2
-      idle-timeout: 300000
-      max-lifetime: 1200000
+      idle-timeout: 30000
+      connection-timeout: 30000
+      max-lifetime: 550000  # 9 minutos y 10 segundos
+      leak-detection-threshold: 60000
+      connection-test-query: select 1
       validation-timeout: 5000
-      keepalive-time: 300000
-      connection-test-query: select 1;
+      poolName: HikariPool-Railway
   jpa:
     open-in-view: true
     generate-ddl: true
