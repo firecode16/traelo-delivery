@@ -18,12 +18,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.traelo.delivery.model.Business;
 import com.traelo.delivery.model.Scheduler;
+import com.traelo.delivery.model.Sector;
 import com.traelo.delivery.model.dto.BusinessDTO;
+import com.traelo.delivery.model.dto.BusinessRequestDTO;
 import com.traelo.delivery.model.dto.MenuDTO;
 import com.traelo.delivery.model.dto.SchedulerDTO;
 import com.traelo.delivery.repository.BusinessRepository;
 import com.traelo.delivery.repository.MenuRepository;
 import com.traelo.delivery.repository.SchedulerRepository;
+import com.traelo.delivery.repository.SectorRepository;
 import com.traelo.delivery.response.PagedResponse;
 import com.traelo.delivery.response.UserResponse;
 import com.traelo.delivery.service.BusinessService;
@@ -39,6 +42,9 @@ public class BusinessServiceImpl implements BusinessService {
 
 	@Autowired
 	private SchedulerRepository schedulerRepository;
+	
+	@Autowired
+	private SectorRepository sectorRepository;
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -48,9 +54,31 @@ public class BusinessServiceImpl implements BusinessService {
 
 	@Transactional
 	@Override
-	public Business createBusiness(Business business) {
-		if (businessRepository.findByUserId(business.getUserId()).isPresent()) {
+	public Business createBusiness(BusinessRequestDTO businessRequestDTO) {
+		if (businessRepository.findByUserId(businessRequestDTO.getUserId()).isPresent()) {
 			throw new RuntimeException("El usuario ya tiene un negocio registrado.");
+		}
+		
+		Business business = new Business();
+		business.setBusinessId(businessRequestDTO.getBusinessId());
+		business.setUserId(businessRequestDTO.getUserId());
+		business.setFullName(businessRequestDTO.getFullName());
+		business.setDescription(businessRequestDTO.getDescription());
+		business.setAddress(businessRequestDTO.getAddress());
+		business.setLongitude(businessRequestDTO.getLongitude());
+		business.setLatitude(businessRequestDTO.getLatitude());
+		business.setBackdrop(businessRequestDTO.getBackdrop());
+		business.setIsActive(businessRequestDTO.getIsActive());
+		business.setAcceptCash(businessRequestDTO.getAcceptCash());
+		business.setAcceptTransfer(businessRequestDTO.getAcceptTransfer());
+		business.setBankClabe(businessRequestDTO.getBankClabe());
+		business.setBankCard(businessRequestDTO.getBankCard());
+		business.setCreatedAt(businessRequestDTO.getCreatedAt());
+		business.setUpdatedAt(businessRequestDTO.getUpdatedAt());
+		
+		if (businessRequestDTO.getSector() != null) {
+			Sector sector = sectorRepository.findBySectorId(businessRequestDTO.getSector().getSectorId()).orElseThrow(() -> new RuntimeException("Sector not found"));
+			business.setSector(sector);
 		}
 		return businessRepository.save(business);
 	}
@@ -75,8 +103,6 @@ public class BusinessServiceImpl implements BusinessService {
 		businessDTO.setAcceptTransfer(business.getAcceptTransfer());
 		businessDTO.setBankClabe(business.getBankClabe());
 		businessDTO.setBankCard(business.getBankCard());
-		businessDTO.setPickUp(business.getPickUp());
-		businessDTO.setAtHome(business.getAtHome());
 		businessDTO.setUpdatedAt(business.getUpdatedAt());
 		return businessDTO;
 	}
@@ -94,8 +120,6 @@ public class BusinessServiceImpl implements BusinessService {
 		existing.setAcceptTransfer(data.getAcceptTransfer());
 		existing.setBankClabe(data.getBankClabe());
 		existing.setBankCard(data.getBankCard());
-		existing.setPickUp(data.getPickUp());
-		existing.setAtHome(data.getAtHome());
 		existing.setUpdatedAt(data.getUpdatedAt());
 
 		return businessRepository.save(existing);
@@ -156,7 +180,7 @@ public class BusinessServiceImpl implements BusinessService {
 			SchedulerDTO schedulerDTO = (scheduler != null) ? new SchedulerDTO(scheduler.getSchedulerId(), scheduler.getBusinessId(), scheduler.getIsActive()) : null;
 
 			UserResponse user = getUserById(b.getUserId());
-			return new BusinessDTO(b.getBusinessId(), b.getUserId(), user.getPhone(), b.getFullName(), b.getDescription(), b.getAddress(), b.getIsActive(), b.getAcceptCash(), b.getAcceptTransfer(), b.getBankClabe(), b.getBankCard(), b.getPickUp(), b.getAtHome(), b.getUpdatedAt(), menus, schedulerDTO);
+			return new BusinessDTO(b.getBusinessId(), b.getUserId(), user.getPhone(), b.getFullName(), b.getDescription(), b.getAddress(), b.getIsActive(), b.getAcceptCash(), b.getAcceptTransfer(), b.getBankClabe(), b.getBankCard(), b.getUpdatedAt(), menus, schedulerDTO);
 		}).toList();
 
 		return new PagedResponse<>(content, businessPage.getNumber(), businessPage.getSize(), businessPage.getTotalPages(), businessPage.getTotalElements(), businessPage.isLast());

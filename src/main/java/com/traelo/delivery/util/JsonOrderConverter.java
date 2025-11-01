@@ -17,7 +17,7 @@ public class JsonOrderConverter implements AttributeConverter<List<String>, Stri
 		try {
 			return mapper.writeValueAsString(attribute);
 		} catch (Exception e) {
-			throw new RuntimeException("Error serializando resumen de orden", e);
+			throw new RuntimeException("Error converting list to JSON", e);
 		}
 	}
 
@@ -26,7 +26,7 @@ public class JsonOrderConverter implements AttributeConverter<List<String>, Stri
 		try {
 			return mapper.readValue(dbData, new TypeReference<List<String>>() { });
 		} catch (Exception e) {
-			throw new RuntimeException("Error deserializando resumen de orden", e);
+			throw new RuntimeException("Error reading JSON from database", e);
 		}
 	}
 }

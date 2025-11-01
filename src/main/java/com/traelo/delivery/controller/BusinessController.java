@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.traelo.delivery.model.Business;
 import com.traelo.delivery.model.dto.BusinessDTO;
+import com.traelo.delivery.model.dto.BusinessRequestDTO;
 import com.traelo.delivery.response.PagedResponse;
 import com.traelo.delivery.service.BusinessService;
 
@@ -34,8 +35,8 @@ public class BusinessController {
 	private BusinessService businessService;
 
 	@PostMapping("/create")
-	public ResponseEntity<?> create(@RequestBody Business business) {
-		return ResponseEntity.ok(businessService.createBusiness(business));
+	public ResponseEntity<Business> create(@RequestBody BusinessRequestDTO businessRequestDTO) {
+		return ResponseEntity.ok(businessService.createBusiness(businessRequestDTO));
 	}
 
 	@GetMapping("/getByUser/{userId}")

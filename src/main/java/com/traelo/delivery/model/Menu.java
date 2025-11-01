@@ -24,6 +24,7 @@ public class Menu {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(unique = true)
 	private Long menuId;
 	private Long businessId;
 	private String name;
