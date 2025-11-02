@@ -33,7 +33,9 @@ public class ZoneCommission {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(unique = true)
+	@Column
+	private Long businessAuxId;
+	@Column
 	private Long zoneCommissionId;
 
 	@Enumerated(EnumType.STRING)

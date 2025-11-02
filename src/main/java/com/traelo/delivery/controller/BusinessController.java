@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.traelo.delivery.model.Business;
 import com.traelo.delivery.model.dto.BusinessDTO;
+import com.traelo.delivery.model.dto.BusinessDashboardDTO;
 import com.traelo.delivery.model.dto.BusinessRequestDTO;
 import com.traelo.delivery.response.PagedResponse;
 import com.traelo.delivery.service.BusinessService;
@@ -98,4 +99,15 @@ public class BusinessController {
 		Pageable pageable = PageRequest.of(page, size);
 		return ResponseEntity.ok(businessService.getAllBusinesses(pageable));
 	}
+	
+	@GetMapping("/{businessId}/dashboard")
+	public ResponseEntity<BusinessDashboardDTO> getBusinessDashboard(@PathVariable Long businessId) {
+	    try {
+	        BusinessDashboardDTO dashboard = businessService.getBusinessDashboard(businessId);
+	        return ResponseEntity.ok(dashboard);
+	    } catch (Exception e) {
+	    	return ResponseEntity.notFound().build();
+	    }
+	}
+
 }

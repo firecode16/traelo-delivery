@@ -38,4 +38,14 @@ public class SectorController {
 		}
 		return ResponseEntity.ok(sectorDTO);
 	}
+
+	@GetMapping("/getSectorByBusinessId/{businessId}")
+	public ResponseEntity<SectorDTO> getSectorByBusinessId(@PathVariable Long businessId) {
+		SectorDTO sectorDTO = sectorService.getSectorByBusinessId(businessId);
+
+		if (sectorDTO == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(sectorDTO);
+	}
 }

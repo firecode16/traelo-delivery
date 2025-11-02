@@ -32,6 +32,8 @@ public class DeliveryZone {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column
+	private Long businessAuxId;
 	@Column(unique = true)
 	private Long deliveryZoneId;
 

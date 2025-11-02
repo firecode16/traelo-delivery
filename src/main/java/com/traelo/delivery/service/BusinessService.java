@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.traelo.delivery.model.Business;
 import com.traelo.delivery.model.dto.BusinessDTO;
+import com.traelo.delivery.model.dto.BusinessDashboardDTO;
 import com.traelo.delivery.model.dto.BusinessRequestDTO;
 import com.traelo.delivery.response.PagedResponse;
 
@@ -22,4 +23,6 @@ public interface BusinessService {
 	byte[] getBusinessLogo(Long businessId);
 
 	PagedResponse<BusinessDTO> getAllBusinesses(Pageable pageable);
+
+	BusinessDashboardDTO getBusinessDashboard(Long businessId);
 }

@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DeliveryZoneDTO {
+	private Long businessAuxId;
 	private Long deliveryZoneId;
 	private String zoneName;
 	private Boolean pickupEnabled;
@@ -18,5 +19,4 @@ public class DeliveryZoneDTO {
 	private Boolean isActive;
 	private String createdAt;
 	private String updatedAt;
-	private Long businessId;
 }

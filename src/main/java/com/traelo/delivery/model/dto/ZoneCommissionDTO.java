@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ZoneCommissionDTO {
+	private Long businessAuxId;
 	private Long zoneCommissionId;
 	private String shippingType;
 	private String selectedOption;
@@ -15,7 +16,6 @@ public class ZoneCommissionDTO {
 	private String address;
 	private Object coordinates;
 	private Long deliveryZoneId;
-	private Long businessId;
 	private String createdAt;
 	private String updatedAt;
 }

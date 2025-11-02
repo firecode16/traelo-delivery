@@ -25,9 +25,10 @@ public class DeliveryZoneServiceImpl implements DeliveryZoneService {
 	@Override
 	public DeliveryZoneDTO createDeliveryZone(DeliveryZoneDTO deliveryZoneDTO) {
 		try {
-			Business business = businessRepository.findByBusinessId(deliveryZoneDTO.getBusinessId()).orElseThrow(() -> new RuntimeException("Business not found"));
+			Business business = businessRepository.findByBusinessId(deliveryZoneDTO.getBusinessAuxId()).orElseThrow(() -> new RuntimeException("Business not found"));
 
 			DeliveryZone deliveryZone = new DeliveryZone();
+			deliveryZone.setBusinessAuxId(deliveryZoneDTO.getBusinessAuxId());
 			deliveryZone.setDeliveryZoneId(deliveryZoneDTO.getDeliveryZoneId());
 			deliveryZone.setZoneName(deliveryZoneDTO.getZoneName());
 			deliveryZone.setPickupEnabled(deliveryZoneDTO.getPickupEnabled());
@@ -57,6 +58,7 @@ public class DeliveryZoneServiceImpl implements DeliveryZoneService {
 
 	private DeliveryZoneDTO convertToResponseDTO(DeliveryZone deliveryZone) {
 		DeliveryZoneDTO dto = new DeliveryZoneDTO();
+		dto.setBusinessAuxId(deliveryZone.getBusinessAuxId());
 		dto.setDeliveryZoneId(deliveryZone.getDeliveryZoneId());
 		dto.setZoneName(deliveryZone.getZoneName());
 		dto.setPickupEnabled(deliveryZone.getPickupEnabled());
@@ -67,7 +69,6 @@ public class DeliveryZoneServiceImpl implements DeliveryZoneService {
 		dto.setIsActive(deliveryZone.isActive());
 		dto.setCreatedAt(deliveryZone.getCreatedAt().toString());
 		dto.setUpdatedAt(deliveryZone.getUpdatedAt().toString());
-		dto.setBusinessId(deliveryZone.getBusiness().getBusinessId());
 		return dto;
 	}
 }

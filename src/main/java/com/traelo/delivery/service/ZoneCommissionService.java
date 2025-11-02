@@ -11,4 +11,6 @@ public interface ZoneCommissionService {
 	ZoneCommissionResponseDTO createZoneCommission(ZoneCommissionDTO zoneCommissionDTO);
 
 	List<ZoneCommissionResponseDTO> getZoneCommissionsByBusinessId(Long businessId);
+
+	List<ZoneCommissionResponseDTO> getZoneCommissionsByBusinessAndZone(Long businessId, Long deliveryZoneId);
 }

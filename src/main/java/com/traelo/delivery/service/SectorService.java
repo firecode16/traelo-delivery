@@ -7,4 +7,6 @@ public interface SectorService {
 	Sector createSector(SectorDTO sectorDTO);
 
 	SectorDTO getSectorBySectorId(Long sectorId);
+
+	SectorDTO getSectorByBusinessId(Long businessId);
 }
