@@ -55,6 +55,9 @@ public class ZoneCommission {
 	@Convert(converter = JsonConverter.class)
 	private Object coordinates;
 
+	@Column(name = "is_active", nullable = false)
+	private boolean isActive = true;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at", nullable = false, updatable = false)
 	private Date createdAt;

@@ -18,6 +18,7 @@ public class ZoneCommissionResponseDTO {
 	private BigDecimal commissionAmount;
 	private String address;
 	private Object coordinates;
+	private boolean isActive;
 	private Long deliveryZoneId;
 	private Date createdAt;
 	private Date updatedAt;

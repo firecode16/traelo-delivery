@@ -3,7 +3,6 @@ package com.traelo.delivery.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +42,8 @@ public class ZoneCommissionServiceImpl implements ZoneCommissionService {
 		System.out.println("=== INICIANDO PROCESAMIENTO DE COMISIONES ===");
 		System.out.println("Total de comisiones recibidas: " + commissions.size());
 
-		AtomicInteger counter = new AtomicInteger(1);
-
 		commissions.forEach(zCommissionDTO -> {
 			try {
-				int currentIndex = counter.getAndIncrement();
-				System.out.println("--- Procesando comisión " + currentIndex + " ---");
-
 				Business business = businessRepository.findByBusinessId(zCommissionDTO.getBusinessAuxId()).orElseThrow(() -> new RuntimeException("Business not found with id: " + zCommissionDTO.getBusinessAuxId()));
 				DeliveryZone deliveryZone = deliveryZoneRepository.findByDeliveryZoneId(zCommissionDTO.getDeliveryZoneId()).orElseThrow(() -> new RuntimeException("DeliveryZone not found with id: " + zCommissionDTO.getDeliveryZoneId()));
 				ShippingType shippingType = ShippingType.valueOf(zCommissionDTO.getShippingType());
@@ -62,6 +56,7 @@ public class ZoneCommissionServiceImpl implements ZoneCommissionService {
 				zoneCommission.setCommissionAmount(zCommissionDTO.getCommissionAmount());
 				zoneCommission.setAddress(zCommissionDTO.getAddress());
 				zoneCommission.setCoordinates(zCommissionDTO.getCoordinates());
+				zoneCommission.setActive(zCommissionDTO.isActive());
 				zoneCommission.setBusiness(business);
 				zoneCommission.setDeliveryZone(deliveryZone);
 				zoneCommission.setCreatedAt(new Date());
@@ -136,6 +131,7 @@ public class ZoneCommissionServiceImpl implements ZoneCommissionService {
 		zoneCommission.setCommissionAmount(zoneCommissionDTO.getCommissionAmount());
 		zoneCommission.setAddress(zoneCommissionDTO.getAddress());
 		zoneCommission.setCoordinates(zoneCommissionDTO.getCoordinates());
+		zoneCommission.setActive(zoneCommissionDTO.isActive());
 		zoneCommission.setBusiness(business);
 		zoneCommission.setDeliveryZone(deliveryZone);
 		zoneCommission.setCreatedAt(new Date());
@@ -172,6 +168,7 @@ public class ZoneCommissionServiceImpl implements ZoneCommissionService {
 		dto.setCommissionAmount(zoneCommission.getCommissionAmount());
 		dto.setAddress(zoneCommission.getAddress());
 		dto.setCoordinates(zoneCommission.getCoordinates());
+		dto.setActive(zoneCommission.isActive());
 		dto.setDeliveryZoneId(zoneCommission.getDeliveryZone().getDeliveryZoneId());
 		dto.setCreatedAt(zoneCommission.getCreatedAt());
 		dto.setUpdatedAt(zoneCommission.getUpdatedAt());

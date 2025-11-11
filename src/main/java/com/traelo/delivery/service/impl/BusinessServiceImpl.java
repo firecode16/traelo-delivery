@@ -259,6 +259,7 @@ public class BusinessServiceImpl implements BusinessService {
 
 	private DeliveryZoneDTO convertToDeliveryZoneDTO(DeliveryZone deliveryZone) {
 	    DeliveryZoneDTO dto = new DeliveryZoneDTO();
+	    dto.setId(deliveryZone.getId());
 	    dto.setBusinessAuxId(deliveryZone.getBusinessAuxId());
 	    dto.setDeliveryZoneId(deliveryZone.getDeliveryZoneId());
 	    dto.setZoneName(deliveryZone.getZoneName());
@@ -280,7 +281,8 @@ public class BusinessServiceImpl implements BusinessService {
 	    dto.setCommissionAmount(zoneCommission.getCommissionAmount());
 	    dto.setAddress(zoneCommission.getAddress());
 	    dto.setCoordinates(zoneCommission.getCoordinates());
-	    dto.setDeliveryZoneId(zoneCommission.getDeliveryZone().getDeliveryZoneId());
+	    dto.setActive(zoneCommission.isActive());
+	    dto.setDeliveryZoneId(zoneCommission.getDeliveryZone().getId());
 	    dto.setCreatedAt(zoneCommission.getCreatedAt());
 	    dto.setUpdatedAt(zoneCommission.getUpdatedAt());
 	    return dto;

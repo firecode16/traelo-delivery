@@ -2,22 +2,21 @@ package com.traelo.delivery.model.dto;
 
 import java.util.List;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class DeliveryZoneDTO {
-	private Long id;
+@Data
+public class DeliveryZoneUpdateRequestDTO {
 	private Long businessAuxId;
-	private Long deliveryZoneId;
-	private String zoneName;
-	private Boolean pickupEnabled;
 	private Boolean homeDeliveryEnabled;
+	private Boolean pickupEnabled;
 	private Boolean deliveryCentersEnabled;
 	private List<ZoneDTO> zones;
 	private List<PointDTO> points;
-	private Boolean isActive;
-	private String createdAt;
-	private String updatedAt;
+	private List<Long> deletedZones;
+	private List<Long> deletedPoints;
+	private Long zoneCommissionId;
 }
