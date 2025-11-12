@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.traelo.delivery.enums.ShippingType;
 import com.traelo.delivery.model.Business;
 import com.traelo.delivery.model.DeliveryZone;
 import com.traelo.delivery.model.ZoneCommission;
@@ -107,10 +108,57 @@ public class DeliveryZoneServiceImpl implements DeliveryZoneService {
 			// 🆕 Sync deletions first
 			handleDeletedZonesAndPoints(businessId, dZoneUpdateRequestDTO);
 
+			handleSaveZoneCommission(dZoneUpdateRequestDTO, savedZone);
+
 			syncCommissionsWithDeliveryOptions(businessId, dZoneUpdateRequestDTO, savedZone);
 		} catch (Exception e) {
 			System.err.println("❌ Error updating delivery zone options: " + e.getMessage());
 			throw new RuntimeException("Error updating delivery zone options: " + e.getMessage(), e);
+		}
+	}
+
+	private void handleSaveZoneCommission(DeliveryZoneUpdateRequestDTO dZoneUpdateRequestDTO, DeliveryZone savedZone) {
+		try {
+			if (dZoneUpdateRequestDTO.getCommissions() != null && !dZoneUpdateRequestDTO.getCommissions().isEmpty()) {
+				dZoneUpdateRequestDTO.getCommissions().forEach(zCommissionDTO -> {
+					Business business = businessRepository.findByBusinessId(zCommissionDTO.getBusinessAuxId()).orElseThrow(() -> new RuntimeException("Business not found with id: " + zCommissionDTO.getBusinessAuxId()));
+					ShippingType shippingType = ShippingType.valueOf(zCommissionDTO.getShippingType());
+					ZoneCommission zoneCommission = null;
+					
+					if (zCommissionDTO.getZoneCommissionId() != null) {
+						zoneCommission = zoneCommissionRepository.findByZoneCommissionIdAndBusinessAuxId(zCommissionDTO.getZoneCommissionId(), zCommissionDTO.getBusinessAuxId()).orElse(null);
+					}
+					
+					if (zoneCommission == null) {
+						zoneCommission = new ZoneCommission();
+						zoneCommission.setBusinessAuxId(zCommissionDTO.getBusinessAuxId());
+						zoneCommission.setZoneCommissionId(zCommissionDTO.getZoneCommissionId());
+						zoneCommission.setCreatedAt(new Date());
+						
+						System.out.println("Creando nueva comisión: " + zCommissionDTO.getZoneCommissionId());
+					} else {
+						System.out.println("Actualizando comisión Existente: " + zoneCommission.getZoneCommissionId());
+					}
+					
+					zoneCommission.setShippingType(shippingType);
+					zoneCommission.setSelectedOption(zCommissionDTO.getSelectedOption());
+					zoneCommission.setCommissionAmount(zCommissionDTO.getCommissionAmount());
+					zoneCommission.setAddress(zCommissionDTO.getAddress());
+					zoneCommission.setCoordinates(zCommissionDTO.getCoordinates());
+					zoneCommission.setActive(true);
+					zoneCommission.setBusiness(business);
+					zoneCommission.setDeliveryZone(savedZone);
+					zoneCommission.setUpdatedAt(new Date());
+					
+					ZoneCommission savedCommission = zoneCommissionRepository.save(zoneCommission);
+					System.out.println("✅ Comisión guardada - ID: " + savedCommission.getId() + ", ZoneCommissionId: " + savedCommission.getZoneCommissionId());
+				});
+			} else {
+				System.out.println("ℹ️ No hay comisiones para Guardar");
+			}
+		} catch (Exception e) {
+			System.err.println("❌ Error en handleSaveZoneCommission: " + e.getMessage());
+			throw new RuntimeException("Error Guardando comisiones: " + e.getMessage(), e);
 		}
 	}
 

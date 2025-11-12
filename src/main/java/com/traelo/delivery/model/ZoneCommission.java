@@ -35,7 +35,7 @@ public class ZoneCommission {
 	private Long id;
 	@Column
 	private Long businessAuxId;
-	@Column
+	@Column(name = "zone_commission_id", unique = true)
 	private Long zoneCommissionId;
 
 	@Enumerated(EnumType.STRING)

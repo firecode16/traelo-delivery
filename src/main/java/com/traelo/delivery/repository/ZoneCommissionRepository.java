@@ -1,6 +1,7 @@
 package com.traelo.delivery.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,6 +19,8 @@ public interface ZoneCommissionRepository extends JpaRepository<ZoneCommission, 
 	List<ZoneCommission> findByBusinessBusinessIdAndDeliveryZoneDeliveryZoneId(Long businessId, Long deliveryZoneId);
 
 	List<ZoneCommission> findByBusinessAuxId(Long businessId);
+
+	Optional<ZoneCommission> findByZoneCommissionIdAndBusinessAuxId(Long zoneCommissionId, Long businessAuxId);
 
 	@Modifying
 	@Query("DELETE FROM ZoneCommission zc WHERE zc.zoneCommissionId = :zoneCommissionId AND zc.businessAuxId = :businessAuxId")

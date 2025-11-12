@@ -18,5 +18,5 @@ public class DeliveryZoneUpdateRequestDTO {
 	private List<PointDTO> points;
 	private List<Long> deletedZones;
 	private List<Long> deletedPoints;
-	private Long zoneCommissionId;
+	private List<ZoneCommissionDTO> commissions;
 }

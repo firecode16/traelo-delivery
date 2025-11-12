@@ -65,7 +65,6 @@ public class ZoneCommissionServiceImpl implements ZoneCommissionService {
 				ZoneCommission savedCommission = zoneCommissionRepository.save(zoneCommission);
 				savedCommissions.add(convertToResponseDTO(savedCommission));
 				System.out.println("Commission guardada - ID: " + savedCommission.getId());
-
 			} catch (DataIntegrityViolationException e) {
 				System.err.println("❌ ERROR DE DUPLICADO - Intentando con ID único diferente...");
 				retryWithNewId(zCommissionDTO, savedCommissions);
