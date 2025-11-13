@@ -16,6 +16,7 @@ import com.traelo.delivery.model.DeliveryZone;
 import com.traelo.delivery.model.ZoneCommission;
 import com.traelo.delivery.model.dto.ZoneCommissionDTO;
 import com.traelo.delivery.model.dto.ZoneCommissionResponseDTO;
+import com.traelo.delivery.model.dto.ZoneCommissionUpdateDTO;
 import com.traelo.delivery.repository.BusinessRepository;
 import com.traelo.delivery.repository.DeliveryZoneRepository;
 import com.traelo.delivery.repository.ZoneCommissionRepository;
@@ -109,7 +110,6 @@ public class ZoneCommissionServiceImpl implements ZoneCommissionService {
 			ZoneCommission savedCommission = zoneCommissionRepository.save(zoneCommission);
 			savedCommissions.add(convertToResponseDTO(savedCommission));
 			System.out.println("COMISIÓN GUARDADA EN REINTENTO - ID: " + savedCommission.getId());
-
 		} catch (Exception ex) {
 			System.err.println("❌ ERROR EN REINTENTO: " + ex.getMessage());
 		}
@@ -173,4 +173,31 @@ public class ZoneCommissionServiceImpl implements ZoneCommissionService {
 		dto.setUpdatedAt(zoneCommission.getUpdatedAt());
 		return dto;
 	}
+
+	@Transactional
+	@Override
+	public void updateZoneCommissionOptions(List<ZoneCommissionUpdateDTO> zCommissionUpdateDTO) {
+		if (!zCommissionUpdateDTO.isEmpty() || zCommissionUpdateDTO != null) {
+			zCommissionUpdateDTO.forEach(zCommissionDTO -> {
+				try {
+					ZoneCommission commissions = zoneCommissionRepository.findByZoneCommissionIdAndBusinessAuxId(zCommissionDTO.getZoneCommissionId(), zCommissionDTO.getBusinessAuxId()).orElse(null);
+					
+					if (commissions != null) {
+						commissions.setSelectedOption(zCommissionDTO.getSelectedOption());
+						commissions.setCommissionAmount(zCommissionDTO.getCommissionAmount());
+						commissions.setUpdatedAt(zCommissionDTO.getUpdatedAt());
+						
+						zoneCommissionRepository.save(commissions);
+						System.out.println("Comisión actualizado: " + zCommissionDTO.getZoneCommissionId());
+					} else {
+						System.out.println("ℹ️ No hay comisiones para Actualizar");
+					}
+				} catch (Exception e) {
+					System.err.println("❌ Error updating zone commission options: " + e.getMessage());
+					throw new RuntimeException("❌ Error updating zone commission options: " + e.getMessage(), e);
+				}
+			});
+		}
+	}
+
 }

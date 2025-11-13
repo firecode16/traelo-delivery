@@ -7,12 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.traelo.delivery.model.dto.ZoneCommissionDTO;
 import com.traelo.delivery.model.dto.ZoneCommissionResponseDTO;
+import com.traelo.delivery.model.dto.ZoneCommissionUpdateDTO;
 import com.traelo.delivery.service.ZoneCommissionService;
 
 @RestController
@@ -45,4 +47,15 @@ public class ZoneCommissionController {
 	public List<ZoneCommissionResponseDTO> getCommissionsByBusiness(@PathVariable Long businessId) {
 		return zoneCommissionService.getZoneCommissionsByBusinessId(businessId);
 	}
+
+	@PutMapping("/update-options")
+	public ResponseEntity<?> updateZoneCommissionOptions(@RequestBody List<ZoneCommissionUpdateDTO> zCommissionUpdateDTO) {
+		try {
+			zoneCommissionService.updateZoneCommissionOptions(zCommissionUpdateDTO);
+			return ResponseEntity.ok().build();
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body("❌ Error updating zone commission options: " + e.getMessage());
+		}
+	}
+
 }
