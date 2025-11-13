@@ -25,13 +25,13 @@ import com.traelo.delivery.model.Business;
 import com.traelo.delivery.model.dto.BusinessDTO;
 import com.traelo.delivery.model.dto.BusinessDashboardDTO;
 import com.traelo.delivery.model.dto.BusinessRequestDTO;
+import com.traelo.delivery.model.dto.PaymentMethodDTO;
 import com.traelo.delivery.response.PagedResponse;
 import com.traelo.delivery.service.BusinessService;
 
 @RestController
 @RequestMapping("/api/business")
 public class BusinessController {
-
 	@Autowired
 	private BusinessService businessService;
 
@@ -108,6 +108,16 @@ public class BusinessController {
 	    } catch (Exception e) {
 	    	return ResponseEntity.notFound().build();
 	    }
+	}
+
+	@PutMapping("/updatePaymentMethods")
+	public ResponseEntity<?> updatePaymentByBusinessId(@RequestBody PaymentMethodDTO paymentMethodDTO) {
+		try {
+			businessService.updatePaymentByBusinessId(paymentMethodDTO);
+			return ResponseEntity.ok().build();
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body("❌ Error updating payment method: " + e.getMessage());
+		}
 	}
 
 }

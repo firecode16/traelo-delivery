@@ -27,6 +27,7 @@ import com.traelo.delivery.model.dto.BusinessDashboardDTO;
 import com.traelo.delivery.model.dto.BusinessRequestDTO;
 import com.traelo.delivery.model.dto.DeliveryZoneDTO;
 import com.traelo.delivery.model.dto.MenuDTO;
+import com.traelo.delivery.model.dto.PaymentMethodDTO;
 import com.traelo.delivery.model.dto.SchedulerDTO;
 import com.traelo.delivery.model.dto.SectorDTO;
 import com.traelo.delivery.model.dto.ZoneCommissionResponseDTO;
@@ -225,6 +226,29 @@ public class BusinessServiceImpl implements BusinessService {
 	    List<ZoneCommissionResponseDTO> zoneCommissionDTO = zoneCommissions.stream().map(this::convertToZoneCommissionResponseDTO).collect(Collectors.toList());
 	    
 	    return new BusinessDashboardDTO(businessDTO, sectorDTO, deliveryZoneDTOs, zoneCommissionDTO);
+	}
+
+	@Transactional
+	@Override
+	public void updatePaymentByBusinessId(PaymentMethodDTO paymentMethodDTO) {
+		if (paymentMethodDTO != null) {
+			Business business = businessRepository.findByBusinessId(paymentMethodDTO.getBusinessId()).orElse(null);
+			
+			try {
+				if (business != null) {
+					business.setAcceptCash(paymentMethodDTO.getAcceptCash());
+					business.setAcceptTransfer(paymentMethodDTO.getAcceptTransfer());
+					business.setBankCard(paymentMethodDTO.getBankCard());
+					business.setBankClabe(paymentMethodDTO.getBankClabe());
+					business.setUpdatedAt(paymentMethodDTO.getUpdatedAt());
+				} else {
+					System.out.println("ℹ️ No hay Metodo de pago para Actualizar");
+				}
+			} catch (Exception e) {
+				System.err.println("❌ Error updating payment method: " + e.getMessage());
+				throw new RuntimeException("❌ Error updating payment method: " + e.getMessage(), e);
+			}
+		}
 	}
 
 	private BusinessRequestDTO convertToBusinessDTO(Business business) {
