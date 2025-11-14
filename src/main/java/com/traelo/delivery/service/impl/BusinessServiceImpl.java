@@ -25,6 +25,7 @@ import com.traelo.delivery.model.ZoneCommission;
 import com.traelo.delivery.model.dto.BusinessDTO;
 import com.traelo.delivery.model.dto.BusinessDashboardDTO;
 import com.traelo.delivery.model.dto.BusinessRequestDTO;
+import com.traelo.delivery.model.dto.BusinessUpdateDTO;
 import com.traelo.delivery.model.dto.DeliveryZoneDTO;
 import com.traelo.delivery.model.dto.MenuDTO;
 import com.traelo.delivery.model.dto.PaymentMethodDTO;
@@ -119,20 +120,18 @@ public class BusinessServiceImpl implements BusinessService {
 
 	@Transactional
 	@Override
-	public Business updateBusinessByUserId(Long userId, Business data) {
+	public BusinessUpdateDTO updateBusinessByUserId(Long userId, BusinessUpdateDTO businessUpdateDTO) {
 		Business existing = businessRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Negocio no encontrado"));
 
-		existing.setFullName(data.getFullName());
-		existing.setDescription(data.getDescription());
-		existing.setAddress(data.getAddress());
-		existing.setIsActive(data.getIsActive());
-		existing.setAcceptCash(data.getAcceptCash());
-		existing.setAcceptTransfer(data.getAcceptTransfer());
-		existing.setBankClabe(data.getBankClabe());
-		existing.setBankCard(data.getBankCard());
-		existing.setUpdatedAt(data.getUpdatedAt());
+		existing.setFullName(businessUpdateDTO.getFullName());
+		existing.setDescription(businessUpdateDTO.getDescription());
+		existing.setAddress(businessUpdateDTO.getAddress());
+		existing.setIsActive(businessUpdateDTO.getIsActive());
+		existing.setUpdatedAt(businessUpdateDTO.getUpdatedAt());
 
-		return businessRepository.save(existing);
+		Business business = businessRepository.save(existing);
+		BusinessUpdateDTO businessDTO = convertToBusinessUpdateDTO(business);
+		return businessDTO;
 	}
 
 	@Transactional
@@ -310,6 +309,16 @@ public class BusinessServiceImpl implements BusinessService {
 	    dto.setCreatedAt(zoneCommission.getCreatedAt());
 	    dto.setUpdatedAt(zoneCommission.getUpdatedAt());
 	    return dto;
+	}
+
+	private BusinessUpdateDTO convertToBusinessUpdateDTO(Business business) {
+		BusinessUpdateDTO dto = new BusinessUpdateDTO();
+		dto.setFullName(business.getFullName());
+		dto.setDescription(business.getDescription());
+		dto.setAddress(business.getAddress());
+		dto.setIsActive(business.getIsActive());
+		dto.setUpdatedAt(business.getUpdatedAt());
+		return dto;
 	}
 
 }

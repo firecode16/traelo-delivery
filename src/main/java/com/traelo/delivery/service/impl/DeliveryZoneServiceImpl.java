@@ -106,7 +106,7 @@ public class DeliveryZoneServiceImpl implements DeliveryZoneService {
 			DeliveryZone savedZone = deliveryZoneRepository.save(deliveryZone);
 
 			// 🆕 Sync deletions first
-			handleDeletedZonesAndPoints(businessId, dZoneUpdateRequestDTO);
+			handleDeletedZonesAndPoints(dZoneUpdateRequestDTO);
 
 			handleSaveZoneCommission(dZoneUpdateRequestDTO, savedZone);
 
@@ -162,14 +162,14 @@ public class DeliveryZoneServiceImpl implements DeliveryZoneService {
 		}
 	}
 
-	private void handleDeletedZonesAndPoints(Long businessId, DeliveryZoneUpdateRequestDTO dZoneUpdateRequestDTO) {
+	private void handleDeletedZonesAndPoints(DeliveryZoneUpdateRequestDTO dZoneUpdateRequestDTO) {
 		try {
 			// Remove commissions from deleted zones
 			if (dZoneUpdateRequestDTO.getDeletedZones() != null && !dZoneUpdateRequestDTO.getDeletedZones().isEmpty()) {
 				System.out.println("🗑️ Eliminando comisiones de zonas: " + dZoneUpdateRequestDTO.getDeletedZones());
 
 				for (Long zoneCommissionId : dZoneUpdateRequestDTO.getDeletedZones()) {
-					zoneCommissionRepository.deleteByZoneCommissionIdAndBusinessAuxId(zoneCommissionId, businessId);
+					zoneCommissionRepository.deleteByZoneCommissionIdAndBusinessAuxId(zoneCommissionId, dZoneUpdateRequestDTO.getBusinessAuxId());
 				}
 			}
 
@@ -178,7 +178,7 @@ public class DeliveryZoneServiceImpl implements DeliveryZoneService {
 				System.out.println("🗑️ Eliminando comisiones de puntos: " + dZoneUpdateRequestDTO.getDeletedPoints());
 
 				for (Long pointCommissionId : dZoneUpdateRequestDTO.getDeletedPoints()) {
-					zoneCommissionRepository.deleteByZoneCommissionIdAndBusinessAuxId(pointCommissionId, businessId);
+					zoneCommissionRepository.deleteByZoneCommissionIdAndBusinessAuxId(pointCommissionId, dZoneUpdateRequestDTO.getBusinessAuxId());
 				}
 			}
 		} catch (Exception e) {

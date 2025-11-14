@@ -19,10 +19,10 @@ public class Sector {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(unique = true)
+	@Column
 	private Long sectorId;
 
-	@Column(name = "name", nullable = false, unique = true, length = 50)
+	@Column(name = "name", nullable = false, length = 50)
 	private String name;
 
 	@Column(name = "display_name_product_tab", nullable = false, length = 50)

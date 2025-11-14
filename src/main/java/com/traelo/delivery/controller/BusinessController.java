@@ -25,6 +25,7 @@ import com.traelo.delivery.model.Business;
 import com.traelo.delivery.model.dto.BusinessDTO;
 import com.traelo.delivery.model.dto.BusinessDashboardDTO;
 import com.traelo.delivery.model.dto.BusinessRequestDTO;
+import com.traelo.delivery.model.dto.BusinessUpdateDTO;
 import com.traelo.delivery.model.dto.PaymentMethodDTO;
 import com.traelo.delivery.response.PagedResponse;
 import com.traelo.delivery.service.BusinessService;
@@ -51,8 +52,8 @@ public class BusinessController {
 	}
 
 	@PutMapping("/updateBusiness/{userId}")
-	public ResponseEntity<?> updateBusinessByUserId(@PathVariable Long userId, @RequestBody Business data) {
-		return ResponseEntity.ok(businessService.updateBusinessByUserId(userId, data));
+	public ResponseEntity<?> updateBusinessByUserId(@PathVariable Long userId, @RequestBody BusinessUpdateDTO businessUpdateDTO) {
+		return ResponseEntity.ok(businessService.updateBusinessByUserId(userId, businessUpdateDTO));
 	}
 
 	@PutMapping("/updateLogo/{businessId}")

@@ -9,6 +9,7 @@ import com.traelo.delivery.model.Business;
 import com.traelo.delivery.model.dto.BusinessDTO;
 import com.traelo.delivery.model.dto.BusinessDashboardDTO;
 import com.traelo.delivery.model.dto.BusinessRequestDTO;
+import com.traelo.delivery.model.dto.BusinessUpdateDTO;
 import com.traelo.delivery.model.dto.PaymentMethodDTO;
 import com.traelo.delivery.response.PagedResponse;
 
@@ -17,7 +18,7 @@ public interface BusinessService {
 
 	BusinessDTO getByUserId(Long userId);
 
-	Business updateBusinessByUserId(Long id, Business business);
+	BusinessUpdateDTO updateBusinessByUserId(Long id, BusinessUpdateDTO businessUpdateDTO);
 
 	int updateLogoBusinessById(Long businessId, MultipartFile logo) throws IOException;
 

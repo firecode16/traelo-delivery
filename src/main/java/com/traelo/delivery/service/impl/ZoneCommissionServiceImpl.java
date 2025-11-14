@@ -51,7 +51,7 @@ public class ZoneCommissionServiceImpl implements ZoneCommissionService {
 
 				ZoneCommission zoneCommission = new ZoneCommission();
 				zoneCommission.setBusinessAuxId(zCommissionDTO.getBusinessAuxId());
-				zoneCommission.setZoneCommissionId(generateUniqueZoneCommissionId());
+				zoneCommission.setZoneCommissionId(zCommissionDTO.getZoneCommissionId());
 				zoneCommission.setShippingType(shippingType);
 				zoneCommission.setSelectedOption(zCommissionDTO.getSelectedOption());
 				zoneCommission.setCommissionAmount(zCommissionDTO.getCommissionAmount());
@@ -96,12 +96,13 @@ public class ZoneCommissionServiceImpl implements ZoneCommissionService {
 
 			ZoneCommission zoneCommission = new ZoneCommission();
 			zoneCommission.setBusinessAuxId(zCommissionDTO.getBusinessAuxId());
-			zoneCommission.setZoneCommissionId(generateUniqueZoneCommissionId());
+			zoneCommission.setZoneCommissionId(zCommissionDTO.getZoneCommissionId());
 			zoneCommission.setShippingType(shippingType);
 			zoneCommission.setSelectedOption(zCommissionDTO.getSelectedOption());
 			zoneCommission.setCommissionAmount(zCommissionDTO.getCommissionAmount());
 			zoneCommission.setAddress(zCommissionDTO.getAddress());
 			zoneCommission.setCoordinates(zCommissionDTO.getCoordinates());
+			zoneCommission.setActive(zCommissionDTO.isActive());
 			zoneCommission.setBusiness(business);
 			zoneCommission.setDeliveryZone(deliveryZone);
 			zoneCommission.setCreatedAt(new Date());
@@ -124,7 +125,7 @@ public class ZoneCommissionServiceImpl implements ZoneCommissionService {
 
 		ZoneCommission zoneCommission = new ZoneCommission();
 		zoneCommission.setBusinessAuxId(zoneCommissionDTO.getBusinessAuxId());
-		zoneCommission.setZoneCommissionId(generateUniqueZoneCommissionId());
+		zoneCommission.setZoneCommissionId(zoneCommissionDTO.getZoneCommissionId());
 		zoneCommission.setShippingType(shippingType);
 		zoneCommission.setSelectedOption(zoneCommissionDTO.getSelectedOption());
 		zoneCommission.setCommissionAmount(zoneCommissionDTO.getCommissionAmount());
@@ -138,10 +139,6 @@ public class ZoneCommissionServiceImpl implements ZoneCommissionService {
 
 		ZoneCommission savedCommission = zoneCommissionRepository.save(zoneCommission);
 		return convertToResponseDTO(savedCommission);
-	}
-
-	private Long generateUniqueZoneCommissionId() {
-		return System.currentTimeMillis() + (long) (Math.random() * 10000) + Thread.currentThread().getId();
 	}
 
 	@Transactional(readOnly = true)
