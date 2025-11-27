@@ -25,6 +25,6 @@ public class BusinessDTO {
 	private String bankCard;
 	private String updatedAt;
 
-	private List<MenuDTO> menu;
+	private List<ProductDTO> products;
 	private SchedulerDTO scheduler;
 }

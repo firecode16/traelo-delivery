@@ -27,10 +27,10 @@ public class ProductVariantStock {
 	@Column(unique = true)
 	private Long productVariantStockId;
 
-	@Column(name = "variant_combination_description", nullable = false, length = 255)
+	@Column(name = "variant_combination_description", length = 255)
 	private String variantCombinationDescription;
 
-	@Column(name = "stock", nullable = false)
+	@Column(name = "stock")
 	private Integer stock;
 
 	@Column(name = "additional_price", precision = 10, scale = 2)

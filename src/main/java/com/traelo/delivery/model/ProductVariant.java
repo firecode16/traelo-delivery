@@ -27,17 +27,14 @@ public class ProductVariant {
 	@Column(unique = true)
 	private Long productVariantId;
 
-	@Column(name = "variant_type", nullable = false, length = 50)
+	@Column(name = "variant_type", length = 50)
 	private String variantType;
 
-	@Column(name = "variant_value", nullable = false, length = 100)
+	@Column(name = "variant_value", length = 100)
 	private String variantValue;
 
 	@Column(name = "price_modifier", precision = 10, scale = 2)
 	private BigDecimal priceModifier;
-
-	@Column(name = "image_url", length = 255)
-	private String imageUrl;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id", nullable = false)

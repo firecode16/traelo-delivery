@@ -22,10 +22,10 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(unique = true)
+	@Column
 	private Long categoryId;
 
-	@Column(name = "name", nullable = false, length = 100)
+	@Column(name = "name", length = 100)
 	private String name;
 
 	@ManyToOne(fetch = FetchType.LAZY)

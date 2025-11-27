@@ -2,6 +2,7 @@ package com.traelo.delivery.service.impl;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.traelo.delivery.model.Business;
 import com.traelo.delivery.model.DeliveryZone;
+import com.traelo.delivery.model.ProductVariant;
 import com.traelo.delivery.model.Scheduler;
 import com.traelo.delivery.model.Sector;
 import com.traelo.delivery.model.ZoneCommission;
@@ -27,14 +29,15 @@ import com.traelo.delivery.model.dto.BusinessDashboardDTO;
 import com.traelo.delivery.model.dto.BusinessRequestDTO;
 import com.traelo.delivery.model.dto.BusinessUpdateDTO;
 import com.traelo.delivery.model.dto.DeliveryZoneDTO;
-import com.traelo.delivery.model.dto.MenuDTO;
 import com.traelo.delivery.model.dto.PaymentMethodDTO;
+import com.traelo.delivery.model.dto.ProductDTO;
+import com.traelo.delivery.model.dto.ProductVariantDTO;
 import com.traelo.delivery.model.dto.SchedulerDTO;
 import com.traelo.delivery.model.dto.SectorDTO;
 import com.traelo.delivery.model.dto.ZoneCommissionResponseDTO;
 import com.traelo.delivery.repository.BusinessRepository;
 import com.traelo.delivery.repository.DeliveryZoneRepository;
-import com.traelo.delivery.repository.MenuRepository;
+import com.traelo.delivery.repository.ProductRepository;
 import com.traelo.delivery.repository.SchedulerRepository;
 import com.traelo.delivery.repository.SectorRepository;
 import com.traelo.delivery.repository.ZoneCommissionRepository;
@@ -47,7 +50,7 @@ public class BusinessServiceImpl implements BusinessService {
 	@Autowired
 	private BusinessRepository businessRepository;
 	@Autowired
-	private MenuRepository menuRepository;
+	private ProductRepository productRepository;
 	@Autowired
 	private SchedulerRepository schedulerRepository;
 	@Autowired
@@ -183,13 +186,42 @@ public class BusinessServiceImpl implements BusinessService {
 		Page<Business> businessPage = businessRepository.findAll(pageable);
 
 		List<BusinessDTO> content = businessPage.stream().map(b -> {
-			List<MenuDTO> menus = menuRepository.findByBusinessId(b.getBusinessId()).stream().map(m -> new MenuDTO(m.getMenuId(), m.getBusinessId(), m.getName(), m.getDescription(), m.getCategory(), m.getPrice(), m.getIsActive(), m.getUpdatedAt())).toList();
+			List<ProductDTO> products = productRepository.findByBusinessBusinessId(b.getBusinessId()).stream().map(product -> {
+				ProductDTO dto = new ProductDTO();
+				dto.setProductId(product.getProductId());
+				dto.setSectorId(product.getSector().getSectorId());
+				dto.setBusinessId(product.getBusiness().getBusinessId());
+				dto.setSectorName(product.getSector().getName());
+				dto.setName(product.getName());
+				dto.setDescription(product.getDescription());
+				dto.setPrice(product.getBasePrice());
+				dto.setActive(product.isActive());
+				dto.setCategory(product.getCategory().getName());
+				dto.setGeneralStock(product.getGeneralStock());
+				dto.setIngredients(product.getAttributes().get("ingredients"));
+				dto.setPreparationTime(product.getPreparationTimeMinutes());
+				dto.setBrand(product.getBrand());
+				
+				List<ProductVariantDTO> variantsDTO = new ArrayList<>();
+				List<ProductVariant> variants = product.getVariants();
+				variants.forEach(variant -> {
+					ProductVariantDTO variantDTO = new ProductVariantDTO();
+					variantDTO.setVariantType(variant.getVariantType());
+					variantDTO.setVariantValue(variant.getVariantValue());
+					variantDTO.setPriceModifier(variant.getPriceModifier());
+					
+					variantsDTO.add(variantDTO);
+				});
+				
+				dto.setVariants(variantsDTO);
+				return dto;
+			}).toList();
 
 			Scheduler scheduler = schedulerRepository.findByBusinessId(b.getBusinessId());
 			SchedulerDTO schedulerDTO = (scheduler != null) ? new SchedulerDTO(scheduler.getSchedulerId(), scheduler.getBusinessId(), scheduler.getIsActive()) : null;
 
 			UserResponse user = getUserById(b.getUserId());
-			return new BusinessDTO(b.getBusinessId(), b.getUserId(), user.getPhone(), b.getFullName(), b.getDescription(), b.getAddress(), b.getIsActive(), b.getAcceptCash(), b.getAcceptTransfer(), b.getBankClabe(), b.getBankCard(), b.getUpdatedAt(), menus, schedulerDTO);
+			return new BusinessDTO(b.getBusinessId(), b.getUserId(), user.getPhone(), b.getFullName(), b.getDescription(), b.getAddress(), b.getIsActive(), b.getAcceptCash(), b.getAcceptTransfer(), b.getBankClabe(), b.getBankCard(), b.getUpdatedAt(), products, schedulerDTO);
 		}).toList();
 
 		return new PagedResponse<>(content, businessPage.getNumber(), businessPage.getSize(), businessPage.getTotalPages(), businessPage.getTotalElements(), businessPage.isLast());
