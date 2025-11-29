@@ -9,7 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CenterDTO {
-	private Double longitude;
+public class ZoneInfoDTO {
+	private String zoneId;
+	private String zoneName;
+	private String deliveryZoneName;
 	private Double latitude;
+	private Double longitude;
+	private String address;
 }

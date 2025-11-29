@@ -1,15 +1,17 @@
 package com.traelo.delivery.model.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ZoneDTO {
 	private String id;
 	private String name;
 	private String place_name;
 	private CenterDTO center;
 	private String address;
-	private Object geometry;
+	private GeometryDTO geometry;
 }

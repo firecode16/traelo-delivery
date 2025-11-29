@@ -18,6 +18,8 @@ public class BusinessDTO {
 	private String fullName;
 	private String description;
 	private String address;
+	private Double latitude;
+	private Double longitude;
 	private Boolean isActive;
 	private Boolean acceptCash;
 	private Boolean acceptTransfer;
@@ -27,4 +29,6 @@ public class BusinessDTO {
 
 	private List<ProductDTO> products;
 	private SchedulerDTO scheduler;
+	List<DeliveryZoneDTO> deliveryZones;
+	List<ZoneCommissionResponseDTO> zoneCommissions;
 }

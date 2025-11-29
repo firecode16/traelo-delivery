@@ -1,6 +1,7 @@
 package com.traelo.delivery.model.dto;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -26,5 +27,7 @@ public class ProductDTO {
 	private String ingredients;
 	private Integer preparationTime;
 	private String brand;
+	private Date createdAt;
+	private Date updatedAt;
 	private List<ProductVariantDTO> variants;
 }

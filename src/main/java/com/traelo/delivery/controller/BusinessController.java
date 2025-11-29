@@ -3,6 +3,7 @@ package com.traelo.delivery.controller;
 import static com.traelo.delivery.util.Util.getImageMimeType;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +28,7 @@ import com.traelo.delivery.model.dto.BusinessDashboardDTO;
 import com.traelo.delivery.model.dto.BusinessRequestDTO;
 import com.traelo.delivery.model.dto.BusinessUpdateDTO;
 import com.traelo.delivery.model.dto.PaymentMethodDTO;
+import com.traelo.delivery.model.dto.ZoneInfoDTO;
 import com.traelo.delivery.response.PagedResponse;
 import com.traelo.delivery.service.BusinessService;
 
@@ -95,10 +97,17 @@ public class BusinessController {
 		}
 	}
 
-	@GetMapping("/getAll")
-	public ResponseEntity<PagedResponse<BusinessDTO>> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+	@GetMapping("/getAllBusinessBySector")
+	public ResponseEntity<PagedResponse<BusinessDTO>> getAllBusinessBySector(
+			@RequestParam("sector") String sectorName,
+			@RequestParam(required = false) Double lat,
+			@RequestParam(required = false) Double lng,
+			@RequestParam(required = false) String zoneId,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+
 		Pageable pageable = PageRequest.of(page, size);
-		return ResponseEntity.ok(businessService.getAllBusinesses(pageable));
+		return ResponseEntity.ok(businessService.getAllBusinesses(sectorName, lat, lng, zoneId, pageable));
 	}
 	
 	@GetMapping("/{businessId}/dashboard")
@@ -118,6 +127,19 @@ public class BusinessController {
 			return ResponseEntity.ok().build();
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body("❌ Error updating payment method: " + e.getMessage());
+		}
+	}
+
+	@GetMapping("/getNearbyZones")
+	public ResponseEntity<List<ZoneInfoDTO>> getNearbyZones(@RequestParam Double lat, @RequestParam Double lng, @RequestParam(defaultValue = "50.0") Double maxDistanceKm) {
+		try {
+			System.out.println("lat: " + lat + ", lng: " + lng + ", maxDistanceKm: " + maxDistanceKm);
+			List<ZoneInfoDTO> zoneInfos = businessService.getNearbyZoneIds(lat, lng, maxDistanceKm);
+			System.out.println("✅ Zonas encontradas: " + zoneInfos.size());
+			return ResponseEntity.ok(zoneInfos);
+		} catch (Exception e) {
+			System.err.println("❌ Error en /getNearbyZones: " + e.getMessage());
+			return ResponseEntity.badRequest().build();
 		}
 	}
 

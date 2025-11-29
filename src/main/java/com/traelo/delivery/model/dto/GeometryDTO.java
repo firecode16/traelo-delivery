@@ -1,15 +1,12 @@
 package com.traelo.delivery.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CenterDTO {
-	private Double longitude;
-	private Double latitude;
+public class GeometryDTO {
+	private Double[] coordinates;
 }
