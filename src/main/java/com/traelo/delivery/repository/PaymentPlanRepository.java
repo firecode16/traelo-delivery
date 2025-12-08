@@ -18,7 +18,7 @@ public interface PaymentPlanRepository extends JpaRepository<PaymentPlan, Long> 
 	@Query("SELECT p FROM PaymentPlan p WHERE p.businessId = :businessId AND p.status IN ('TRIAL', 'ACTIVE')")
 	Optional<PaymentPlan> findActiveByBusinessId(@Param("businessId") Long businessId);
 
-	@Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM PaymentPlan p WHERE p.businessId = :businessId AND p.status IN ('TRIAL', 'ACTIVE')")
+	@Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM PaymentPlan p WHERE p.businessId = :businessId AND p.status IN ('TRIAL', 'ACTIVE', 'PENDING')")
 	boolean existsActiveByBusinessId(@Param("businessId") Long businessId);
 
 	Optional<PaymentPlan> findByExternalReference(String externalReference);

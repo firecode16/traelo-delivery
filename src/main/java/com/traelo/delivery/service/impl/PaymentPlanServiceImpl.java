@@ -1,6 +1,7 @@
 package com.traelo.delivery.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,39 +36,66 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 	@Override
 	@Transactional
 	public PaymentPlanDTO createPaymentPlan(CreatePaymentPlanDTO request) {
-		try {
-			log.info("Creando PaymentPlan para businessId: {}, userId: {}", request.getBusinessId(), request.getUserId());
+	    try {
+	        log.info("Creando PaymentPlan para businessId: {}, userId: {}", request.getBusinessId(), request.getUserId());
 
-			// Verify that there is no active subscription
-			if (hasActiveSubscription(request.getBusinessId())) {
-				throw new RuntimeException("El negocio ya tiene una suscripción activa");
-			}
+	        Optional<PaymentPlan> existingPlan = paymentPlanRepository.findByBusinessId(request.getBusinessId());
+	        
+	        if (existingPlan.isPresent()) {
+	            PaymentPlan plan = existingPlan.get();
+	            
+	            log.info("Ya existe un PaymentPlan para este negocio. ID: {}, Estado actual: {}", plan.getId(), plan.getStatus());
+	            
+	            // Si está cancelado, reactivarlo como TRIAL
+	            if (plan.getStatus() == PaymentStatus.CANCELLED) {
+	                log.info("Reactivating cancelled plan ID: {}", plan.getId());
+	                
+	                LocalDateTime now = LocalDateTime.now();
+	                plan.setStatus(PaymentStatus.TRIAL);
+	                plan.setTrialStart(now);
+	                plan.setTrialEnd(now.plusDays(DEFAULT_TRIAL_DAYS));
+	                plan.setAmountMxn(DEFAULT_PLAN_AMOUNT);
+	                plan.setLastPaymentDate(null);
+	                plan.setNextBillingDate(null);
+	                plan.setPaymentMethod(null);
+	                plan.setPaymentProofUrl(null);
+	                plan.setNotes("Reactivated from cancelled state");
+	                
+	                PaymentPlan paymentPlan = paymentPlanRepository.save(plan);
+	                
+	                log.info("Plan reactivado exitosamente. ID: {}, Nuevo estado: {}", paymentPlan.getId(), paymentPlan.getStatus());
+	                
+	                return convertToDTO(paymentPlan);
+	            }
+	            
+	            throw new RuntimeException("El negocio ya tiene una suscripción (Estado: " +  plan.getStatus() + "). No se puede crear otra.");
+	        }
 
-			String externalReference = generateExternalReference(request.getBusinessId());
+	        // Si no existe, crear uno nuevo
+	        String externalReference = generateExternalReference(request.getBusinessId());
+	        LocalDateTime now = LocalDateTime.now();
+	        
+	        PaymentPlan paymentPlan = PaymentPlan.builder()
+	                .businessId(request.getBusinessId())
+	                .userId(request.getUserId())
+	                .planType(PlanType.BUSINESS_PLAN)
+	                .status(PaymentStatus.TRIAL)
+	                .externalReference(externalReference)
+	                .amountMxn(DEFAULT_PLAN_AMOUNT)
+	                .trialDays(DEFAULT_TRIAL_DAYS)
+	                .trialStart(now)
+	                .trialEnd(now.plusDays(DEFAULT_TRIAL_DAYS))
+	                .build();
 
-			LocalDateTime now = LocalDateTime.now();
-			
-			PaymentPlan paymentPlan = PaymentPlan.builder()
-					.businessId(request.getBusinessId())
-					.userId(request.getUserId())
-					.planType(PlanType.BUSINESS_PLAN)
-					.status(PaymentStatus.TRIAL)
-					.externalReference(externalReference)
-					.amountMxn(DEFAULT_PLAN_AMOUNT)
-					.trialDays(DEFAULT_TRIAL_DAYS)
-					.trialStart(now)
-					.trialEnd(now.plusDays(DEFAULT_TRIAL_DAYS))
-					.build();
+	        paymentPlan = paymentPlanRepository.save(paymentPlan);
 
-			paymentPlan = paymentPlanRepository.save(paymentPlan);
+	        log.info("PaymentPlan creado exitosamente. ID: {}, BusinessId: {}", paymentPlan.getId(), request.getBusinessId());
 
-			log.info("PaymentPlan creado exitosamente. ID: {}, BusinessId: {}", paymentPlan.getId(), request.getBusinessId());
-
-			return convertToDTO(paymentPlan);
-		} catch (Exception e) {
-			log.error("Error creando PaymentPlan: {}", e.getMessage(), e);
-			throw new RuntimeException("Error al crear plan de pago: " + e.getMessage());
-		}
+	        return convertToDTO(paymentPlan);
+	    } catch (Exception e) {
+	        log.error("Error creando PaymentPlan: {}", e.getMessage(), e);
+	        throw new RuntimeException("Error al crear plan de pago: " + e.getMessage());
+	    }
 	}
 
 	@Override
@@ -97,7 +125,7 @@ public class PaymentPlanServiceImpl implements PaymentPlanService {
 		PaymentPlan paymentPlan = paymentPlanRepository.findById(id).orElseThrow(() -> new RuntimeException("PaymentPlan no encontrado con id: " + id));
 
 		// Verify that it can be activated
-		if (paymentPlan.getStatus() != PaymentStatus.TRIAL && paymentPlan.getStatus() != PaymentStatus.PENDING) {
+		if (paymentPlan.getStatus() != PaymentStatus.TRIAL && paymentPlan.getStatus() != PaymentStatus.PENDING && paymentPlan.getStatus() != PaymentStatus.CANCELLED) {
 			throw new RuntimeException("El plan no puede ser activado en su estado actual: " + paymentPlan.getStatus());
 		}
 
