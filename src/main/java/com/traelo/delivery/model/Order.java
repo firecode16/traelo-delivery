@@ -3,8 +3,8 @@ package com.traelo.delivery.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.traelo.delivery.enums.OrderStatus;
 import com.traelo.delivery.util.JsonOrderConverter;
-import com.traelo.delivery.util.OrderStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -38,6 +38,10 @@ public class Order {
 	private OrderStatus status = OrderStatus.PENDING;
 
 	private String address;
+	@Column(name = "delivery_address_latitude")
+    private Double deliveryAddressLatitude;
+    @Column(name = "delivery_address_longitude")
+    private Double deliveryAddressLongitude;
 
 	@Column(columnDefinition = "TEXT")
 	private String notes;

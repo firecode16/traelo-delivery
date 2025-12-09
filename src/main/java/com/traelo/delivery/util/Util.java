@@ -15,4 +15,8 @@ public class Util {
 		return null;
 	}
 
+	public static Long generateUniqueID() {
+		return System.currentTimeMillis() + (long) (Math.random() * 10000) + Thread.currentThread().getId();
+	}
+
 }

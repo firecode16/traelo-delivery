@@ -3,7 +3,7 @@ package com.traelo.delivery.model.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.traelo.delivery.util.OrderStatus;
+import com.traelo.delivery.enums.OrderStatus;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

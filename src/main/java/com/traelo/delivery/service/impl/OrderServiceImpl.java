@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.traelo.delivery.enums.OrderStatus;
 import com.traelo.delivery.model.Order;
 import com.traelo.delivery.model.dto.OrderRequestDTO;
 import com.traelo.delivery.repository.OrderRepository;
 import com.traelo.delivery.service.OrderService;
-import com.traelo.delivery.util.OrderStatus;
 
 @Service
 public class OrderServiceImpl implements OrderService {

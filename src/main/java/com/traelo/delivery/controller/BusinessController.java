@@ -3,6 +3,7 @@ package com.traelo.delivery.controller;
 import static com.traelo.delivery.util.Util.getImageMimeType;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -23,19 +24,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.traelo.delivery.model.Business;
 import com.traelo.delivery.model.dto.BusinessDTO;
+import com.traelo.delivery.model.dto.BusinessDashboardDTO;
+import com.traelo.delivery.model.dto.BusinessRequestDTO;
+import com.traelo.delivery.model.dto.BusinessUpdateDTO;
+import com.traelo.delivery.model.dto.PaymentMethodDTO;
+import com.traelo.delivery.model.dto.ZoneInfoDTO;
 import com.traelo.delivery.response.PagedResponse;
 import com.traelo.delivery.service.BusinessService;
 
 @RestController
 @RequestMapping("/api/business")
 public class BusinessController {
-
 	@Autowired
 	private BusinessService businessService;
 
 	@PostMapping("/create")
-	public ResponseEntity<?> create(@RequestBody Business business) {
-		return ResponseEntity.ok(businessService.createBusiness(business));
+	public ResponseEntity<Business> create(@RequestBody BusinessRequestDTO businessRequestDTO) {
+		return ResponseEntity.ok(businessService.createBusiness(businessRequestDTO));
 	}
 
 	@GetMapping("/getByUser/{userId}")
@@ -49,8 +54,8 @@ public class BusinessController {
 	}
 
 	@PutMapping("/updateBusiness/{userId}")
-	public ResponseEntity<?> updateBusinessByUserId(@PathVariable Long userId, @RequestBody Business data) {
-		return ResponseEntity.ok(businessService.updateBusinessByUserId(userId, data));
+	public ResponseEntity<?> updateBusinessByUserId(@PathVariable Long userId, @RequestBody BusinessUpdateDTO businessUpdateDTO) {
+		return ResponseEntity.ok(businessService.updateBusinessByUserId(userId, businessUpdateDTO));
 	}
 
 	@PutMapping("/updateLogo/{businessId}")
@@ -92,9 +97,50 @@ public class BusinessController {
 		}
 	}
 
-	@GetMapping("/getAll")
-	public ResponseEntity<PagedResponse<BusinessDTO>> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+	@GetMapping("/getAllBusinessBySector")
+	public ResponseEntity<PagedResponse<BusinessDTO>> getAllBusinessBySector(
+			@RequestParam("sector") String sectorName,
+			@RequestParam(required = false) Double lat,
+			@RequestParam(required = false) Double lng,
+			@RequestParam(required = false) String zoneId,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+
 		Pageable pageable = PageRequest.of(page, size);
-		return ResponseEntity.ok(businessService.getAllBusinesses(pageable));
+		return ResponseEntity.ok(businessService.getAllBusinesses(sectorName, lat, lng, zoneId, pageable));
 	}
+	
+	@GetMapping("/{businessId}/dashboard")
+	public ResponseEntity<BusinessDashboardDTO> getBusinessDashboard(@PathVariable Long businessId) {
+	    try {
+	        BusinessDashboardDTO dashboard = businessService.getBusinessDashboard(businessId);
+	        return ResponseEntity.ok(dashboard);
+	    } catch (Exception e) {
+	    	return ResponseEntity.notFound().build();
+	    }
+	}
+
+	@PutMapping("/updatePaymentMethods")
+	public ResponseEntity<?> updatePaymentByBusinessId(@RequestBody PaymentMethodDTO paymentMethodDTO) {
+		try {
+			businessService.updatePaymentByBusinessId(paymentMethodDTO);
+			return ResponseEntity.ok().build();
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body("❌ Error updating payment method: " + e.getMessage());
+		}
+	}
+
+	@GetMapping("/getNearbyZones")
+	public ResponseEntity<List<ZoneInfoDTO>> getNearbyZones(@RequestParam Double lat, @RequestParam Double lng, @RequestParam(defaultValue = "50.0") Double maxDistanceKm) {
+		try {
+			System.out.println("lat: " + lat + ", lng: " + lng + ", maxDistanceKm: " + maxDistanceKm);
+			List<ZoneInfoDTO> zoneInfos = businessService.getNearbyZoneIds(lat, lng, maxDistanceKm);
+			System.out.println("✅ Zonas encontradas: " + zoneInfos.size());
+			return ResponseEntity.ok(zoneInfos);
+		} catch (Exception e) {
+			System.err.println("❌ Error en /getNearbyZones: " + e.getMessage());
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
 }
