@@ -1,6 +1,6 @@
 FROM java:17
 
-LABEL maintainer="hfredi35@gmail.com"
+LABEL maintainer="usuario@gmail.com"
 
 VOLUME /tmp
 

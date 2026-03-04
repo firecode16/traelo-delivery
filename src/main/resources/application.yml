@@ -10,7 +10,7 @@ spring:
       enabled: ALWAYS
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.1.122:3306/traelo_db?useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://192.0.0.0:3306/traelo_db?useSSL=false&allowPublicKeyRetrieval=true
     username: server
     password: admin123
     hikari:
