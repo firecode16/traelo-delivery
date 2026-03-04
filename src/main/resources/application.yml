@@ -37,7 +37,7 @@ spring:
 traelo:
   security:
     datauser:
-      url: http://traelo-security.railway.internal:8082/api/auth/getDataUser/
+      url: http://traelo-security.infra.internal:8082/api/auth/getDataUser/
 
 logging:
   level:
